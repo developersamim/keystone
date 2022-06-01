@@ -5,6 +5,7 @@ using AdminWebApp.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -32,6 +33,8 @@ builder.Services.AddOidcAuthentication(options =>
     // For more information, see https://aka.ms/blazor-standalone-auth
     builder.Configuration.Bind("oidc", options.ProviderOptions);
 });
+
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();
 
