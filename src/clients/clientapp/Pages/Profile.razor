@@ -1,0 +1,41 @@
+﻿@page "/profile"
+@attribute [Authorize]
+@*
+<PageTitle>Profile</PageTitle>*@
+
+@*<MudPaper Height="100%" Width="100%">
+    <MudContainer Fixed="true">
+        <MudCard>
+            <MudCardContent>
+                <MudText>Story of the day</MudText>
+                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+</MudPaper>*@
+
+<MudCard>
+    <MudCardContent>
+        <div Style="text-align: center">
+            <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
+            <MudText>Samim Ahmed</MudText>
+            <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
+        </div>
+        <MudForm>
+            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="Email Address" />
+            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="First Name" />
+            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="Last Name" />
+            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="Date of Birth" />
+        </MudForm>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Save</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    string creditCardNr = "4012 8888 8888 1881";
+}
