@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace clientaggregator.application.Features.Profile.Commands.DeleteProfileElements
+namespace clientaggregator.application.Features.User.Commands.DeleteProfileElements
 {
     public class DeleteProfileElementsCommand : IRequest<Unit>
     {

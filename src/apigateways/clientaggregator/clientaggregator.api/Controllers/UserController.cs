@@ -1,7 +1,7 @@
 ﻿using clientaggregator.api.Models;
 using clientaggregator.application.Contracts.Models.Profile;
-using clientaggregator.application.Features.Profile.Commands.UpdateProfile;
-using clientaggregator.application.Features.Profile.Queries.GetProfile;
+using clientaggregator.application.Features.User.Commands.UpdateProfile;
+using clientaggregator.application.Features.User.Queries.GetProfile;
 using common.api.authentication;
 using common.utilities;
 using MediatR;
@@ -18,13 +18,12 @@ namespace clientaggregator.api.Controllers
     [Route("[controller]")]
     [ApiController]
     [Authorize(AuthConstant.KnownAuthorizationPolicyName.ClientAccess)]
-    //[Authorize]
-    public class ProfileController : ControllerBase
+    public class UserController : ControllerBase
     {
-        private readonly ILogger<ProfileController> _logger;
+        private readonly ILogger<UserController> _logger;
         private readonly IMediator mediator;
 
-        public ProfileController(ILogger<ProfileController> logger, IMediator mediator)
+        public UserController(ILogger<UserController> logger, IMediator mediator)
         {
             _logger = logger;
             this.mediator = mediator;
@@ -38,9 +37,6 @@ namespace clientaggregator.api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<CustomerProfileDto>> GetProfile()
         {
-            //var profile = await _profileService.GetProfile(User.UserId());
-            //return Ok(profile);
-
             var query = new GetProfileQuery()
             {
                 UserId = User.UserId()

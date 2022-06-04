@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace clientaggregator.infrastructure.Customer
+namespace clientaggregator.infrastructure.User
 {
-    public partial class CustomerServiceApi
+    public partial class UserService
     {
         public async Task<CustomerProfileDto> GetProfile(string userId)
         {

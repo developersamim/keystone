@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace clientaggregator.application.Features.Profile.Queries.GetProfile
+namespace clientaggregator.application.Features.User.Queries.GetProfile
 {
     public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, CustomerProfileDto>
     {

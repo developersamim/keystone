@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace clientaggregator.application.Features.Profile.Commands.UpdateProfile
+namespace clientaggregator.application.Features.User.Commands.UpdateProfile
 {
     public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, Unit>
     {

@@ -1,7 +1,7 @@
 ﻿using clientaggregator.application.Contracts.Models.Profile;
 using MediatR;
 
-namespace clientaggregator.application.Features.Profile.Queries.GetProfile
+namespace clientaggregator.application.Features.User.Queries.GetProfile
 {
     public class GetProfileQuery : IRequest<CustomerProfileDto>
     {

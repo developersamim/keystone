@@ -1,6 +1,6 @@
 ﻿using clientaggregator.application.Contracts.Infrastructure.Customer;
-using clientaggregator.infrastructure.Customer;
 using clientaggregator.infrastructure.Settings;
+using clientaggregator.infrastructure.User;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -10,7 +10,7 @@ namespace clientaggregator.infrastructure
     {
         public static IServiceCollection AddInfrastructureSerivces(this IServiceCollection services, ApiSetting apiSettings, string clientCredentialsTokenKey)
         {
-            services.AddHttpClient<ICustomerService, CustomerServiceApi>(o =>
+            services.AddHttpClient<ICustomerService, UserService>(o =>
             {
                 o.BaseAddress = new Uri(apiSettings.CustomerApi);
                 o.DefaultRequestHeaders.Add("User-Agent", apiSettings.UserAgent);

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace clientaggregator.infrastructure.Customer
+namespace clientaggregator.infrastructure.User
 {
-    public partial class CustomerServiceApi
+    public partial class UserService
     {
         public async Task DeleteProfileElements(string userId, List<string> keys)
         {

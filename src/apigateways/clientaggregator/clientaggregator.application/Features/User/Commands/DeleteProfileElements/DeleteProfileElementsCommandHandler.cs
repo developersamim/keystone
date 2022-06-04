@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace clientaggregator.application.Features.Profile.Commands.DeleteProfileElements
+namespace clientaggregator.application.Features.User.Commands.DeleteProfileElements
 {
     public class DeleteProfileElementsCommandHandler : IRequestHandler<DeleteProfileElementsCommand, Unit>
     {

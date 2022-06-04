@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace clientaggregator.application.Features.Profile.Commands.UpdateProfile
+namespace clientaggregator.application.Features.User.Commands.UpdateProfile
 {
     public class UpdateProfileCommand : IRequest<Unit>
     {
