@@ -21,6 +21,14 @@ namespace clientaggregator.infrastructure.User
             return result;
         }
 
+        public async Task<IEnumerable<CustomerProfileDto>> GetUsers()
+        {
+
+            var response = await Client.GetAsync($"{ControllerUrl}/all");
+            var result = await ValidateResponse<IEnumerable<CustomerProfileDto>>(response);
+            return result;
+        }
+
         public async Task<CustomerProfileDto> GetUserByClaims(Dictionary<string, string> claims)
         {
             var user = new CustomerProfileDto();

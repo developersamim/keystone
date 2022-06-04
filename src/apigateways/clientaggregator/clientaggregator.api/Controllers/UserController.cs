@@ -2,6 +2,7 @@
 using clientaggregator.application.Contracts.Models.Profile;
 using clientaggregator.application.Features.User.Commands.UpdateProfile;
 using clientaggregator.application.Features.User.Queries.GetProfile;
+using clientaggregator.application.Features.User.Queries.GetUsers;
 using common.api.authentication;
 using common.utilities;
 using MediatR;
@@ -33,7 +34,7 @@ namespace clientaggregator.api.Controllers
         /// Gets the profile information of the current logged in user
         /// </summary>
         /// <returns>Profile Information</returns>
-        [HttpGet]
+        [HttpGet("[action]")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<CustomerProfileDto>> GetProfile()
         {
@@ -41,6 +42,17 @@ namespace clientaggregator.api.Controllers
             {
                 UserId = User.UserId()
             };
+
+            var result = await mediator.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpGet("[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<CustomerProfileDto>> GetUsers()
+        {
+            var query = new GetUsersQuery();
 
             var result = await mediator.Send(query);
 
@@ -63,8 +75,6 @@ namespace clientaggregator.api.Controllers
                 [Constant.KnownUserClaim.Birthdate] = request.Birthdate.Date.ToString("yyyy-MM-dd"),
                 [Constant.KnownUserClaim.ProfileVerified] = true
             };
-
-
 
             var query = new UpdateProfileCommand()
             {

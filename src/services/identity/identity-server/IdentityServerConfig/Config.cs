@@ -73,7 +73,8 @@ public static class Config
                 {
                     Name = "role",
                     UserClaims = new List<string> { "role" }
-                }
+                },
+                new IdentityResources.Email()
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -88,23 +89,13 @@ public static class Config
         {
                 // ensure user claims are in access token if profile scope is used
                 new ApiResource(
-                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Profile,                    
                     "Profile Scope",
                     ProfileResource.ResourceUserClaims)
                 {
-                    Scopes = { IdentityServerConstants.StandardScopes.Profile }
-                },
-
-                new ApiResource("product_resource", "product api")
-                {
-                    Scopes = new List<string> {
-                        KnownScope.ServerAccess.ToScope(),
-                        KnownScope.ClientAccess.ToScope(),
-                        KnownScope.Role.ToScope(),
-                        IdentityServerConstants.StandardScopes.OpenId
-                    },
-                    //ApiSecrets = new List<Secret> { new Secret("ScopeSecret".Sha256())},
-                    UserClaims = new List<string> {"role", "email"}
+                    Scopes = { 
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 },
                 new ApiResource("user_resource", "user api")
                 {
@@ -116,28 +107,7 @@ public static class Config
                     },
                     //ApiSecrets = new List<Secret> { new Secret("ScopeSecret".Sha256())},
                     UserClaims = new List<string> {"role", "email"}
-                },
-                new ApiResource("transaction_resource", "transaction api")
-                {
-                    Scopes= new List<string> {
-                        KnownScope.ServerAccess.ToScope(),
-                        KnownScope.ClientAccess.ToScope(),
-                        KnownScope.Role.ToScope(),
-                        IdentityServerConstants.StandardScopes.OpenId
-                    },
-                    UserClaims = new List<string> {"role", "email"}
-                },
-                //new ApiResource("product_function", "product function")
-                //{
-                //    Scopes= new List<string>
-                //    {
-                //        KnownScope.ServerAccess.ToScope(),
-                //        KnownScope.ClientAccess.ToScope(),
-                //        KnownScope.Role.ToScope(),
-                //        IdentityServerConstants.StandardScopes.OpenId
-                //    },
-                //    UserClaims = new List<string> {"role", "email"}
-                //}
+                }
         };
 
     public static IEnumerable<Client> DevelopmentClients =>
@@ -171,6 +141,7 @@ public static class Config
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.OfflineAccess,
+                        IdentityServerConstants.StandardScopes.Email
                     }
                 }
         };
@@ -184,109 +155,7 @@ public static class Config
 
     public static IEnumerable<Client> Clients =>
         new List<Client>
-        {
-                new()
-                {
-                    ClientName = "vending-machine app",
-                    ClientId = "vending-machine.app",
-                
-                    // RequireConsent = false,
-                    AccessTokenLifetime = 3600, // 60 minutes
-                    IdentityTokenLifetime = 36000, // 10 hours
-
-                    RequireClientSecret = false,
-                    AllowedGrantTypes = GrantTypes.Code,
-                    RequirePkce = true,
-
-                    AllowOfflineAccess = true,
-                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                    RefreshTokenExpiration = TokenExpiration.Sliding,
-
-                    AlwaysIncludeUserClaimsInIdToken = true,
-                    AllowAccessTokensViaBrowser = true,
-
-                    UpdateAccessTokenClaimsOnRefresh = true,
-
-                    RedirectUris = new List<string>
-                    {
-                        "http://localhost:4200/welcome",
-                        "http://localhost:4200/login",
-                        "http://localhost:4200/assets/silent-renew.html",
-                        "http://localhost:8100/login",
-                        "http://localhost:8100/welcome",
-                        "http://localhost:8100/assets/silent-renew.html",
-                        "barnyard.app://welcome",
-                        "barnyard.app://login",
-                        "barnyard.app://assets/silent-renew.html",
-                        "https://barnyard.app/welcome",
-                        "https://barnyard.app/login",
-                        "https://barnyard.app/assets/silent-renew.html",
-
-                        "https://oauth.pstmn.io/v1/callback"
-                    },
-                    PostLogoutRedirectUris = new List<string>
-                    {
-                        "http://localhost:4200",
-                        "http://localhost:4200/welcome",
-                        "http://localhost:4200/login",
-                        "http://localhost:8100",
-                        "http://localhost:8100/welcome",
-                        "http://localhost:8100/login",
-                        "https://barnyard.app",
-                        "https://barnyard.app/welcome",
-                        "https://barnyard.app/login",
-                        "barnyard.app://",
-                        "barnyard.app://welcome",
-                        "barnyard.app://login",
-                    },
-                    AllowedCorsOrigins = new List<string>
-                    {
-                        "http://localhost:4200",
-                        "http://localhost:8100",
-                        "https://barnyard.app"
-                    },
-                    AllowedScopes = new List<string>
-                    {
-                        KnownScope.ClientAccess.ToScope(),
-                        KnownScope.Role.ToScope(),
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.OfflineAccess
-                    }
-
-                },
-                new Client
-                {
-                    ClientId = "product.api",
-                    ClientName = "Product API",
-
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("secret".Sha256())},
-
-                    AllowedScopes =
-                    {
-                        KnownScope.ServerAccess.ToScope(),
-                        KnownScope.ClientAccess.ToScope(),
-                        KnownScope.Role.ToScope(),
-                        IdentityServerConstants.StandardScopes.OpenId
-                    }
-                },
-                new Client
-                {
-                    ClientId = "transaction.api",
-                    ClientName = "Transaction API",
-
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("secret".Sha256())},
-
-                    AllowedScopes =
-                    {
-                        KnownScope.ServerAccess.ToScope(),
-                        KnownScope.ClientAccess.ToScope(),
-                        KnownScope.Role.ToScope(),
-                        IdentityServerConstants.StandardScopes.OpenId
-                    }
-                },
+        {               
                 new Client
                 {
                     ClientId = "clientaggregator.api",
@@ -303,43 +172,6 @@ public static class Config
                         IdentityServerConstants.StandardScopes.OpenId
                     }
                 },
-                new Client
-                {
-                    ClientId = "mvc-app.client",
-                    ClientName = "MVC Client App",
-
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("secret".Sha256())},
-
-                    AllowedScopes =
-                    {
-                        //KnownScope.ServerAccess.ToScope(),
-                        KnownScope.ClientAccess.ToScope()
-                    }
-                },
-                // interactive client using code flow + pkce
-                new Client
-                {
-                    ClientId = "interactive",
-                    ClientSecrets = { new Secret("secret".Sha256())},
-
-                    AllowedGrantTypes = GrantTypes.Code,
-
-                    RedirectUris = {"https://localhost:9001/signin-oidc"},
-                    FrontChannelLogoutUri = "https://localhost:9001/signout-oidc",
-                    PostLogoutRedirectUris = {"https://localhost:9001/signout-callback-oidc"},
-
-                    AllowOfflineAccess = true,
-                    AllowedScopes = {
-                        "openid",
-                        "profile",
-                        KnownScope.ClientAccess.ToScope(),
-                        KnownScope.Role.ToScope()
-                    },
-                    RequirePkce = true,
-                    RequireConsent = true,
-                    AllowPlainTextPkce = false
-                },
                 // blazor wasm clientapp
                 new Client
                 {
@@ -355,7 +187,8 @@ public static class Config
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        KnownScope.ClientAccess.ToScope()
+                        KnownScope.ClientAccess.ToScope(),
+                        IdentityServerConstants.StandardScopes.Email
                     },
                     RedirectUris =
                     {

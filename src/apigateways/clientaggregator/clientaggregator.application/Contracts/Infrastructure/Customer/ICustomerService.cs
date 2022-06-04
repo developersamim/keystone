@@ -13,5 +13,6 @@ namespace clientaggregator.application.Contracts.Infrastructure.Customer
         Task UpdateProfile(string userId, Dictionary<string, object> userProfile);
         Task DeleteProfileElements(string userId, List<string> keys);
         Task<CustomerProfileDto> GetUserByClaims(Dictionary<string, string> claims);
+        Task<IEnumerable<CustomerProfileDto>> GetUsers();
     }
 }

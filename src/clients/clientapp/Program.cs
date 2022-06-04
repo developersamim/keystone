@@ -17,7 +17,7 @@ builder.Services.AddTransient<CustomAuthorizationMessageHandler>();
 builder.Services.AddHttpClient<UserService>
     (client =>
     {
-        client.BaseAddress = new Uri("http://localhost:2000");
+        client.BaseAddress = new Uri("http://localhost:9000");
     })
     .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
 
