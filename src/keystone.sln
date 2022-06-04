@@ -41,6 +41,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "user.domain", "services\use
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clientapp", "clients\clientapp\clientapp.csproj", "{3349AFB1-B0A8-4D29-B4FB-2053E8ECD4DE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apigateways", "apigateways", "{53952453-C580-4FB0-8A37-DBF48B8285F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "clientaggregator", "clientaggregator", "{A2367078-1144-42D2-B934-9D6EBA5D402A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clientaggregator.api", "apigateways\clientaggregator\clientaggregator.api\clientaggregator.api.csproj", "{A489BCEF-F969-4129-838F-A8A420D654D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clientaggregator.application", "apigateways\clientaggregator\clientaggregator.application\clientaggregator.application.csproj", "{AA03CEE1-2512-4E43-B5D5-7F9D920C1C03}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clientaggregator.infrastructure", "apigateways\clientaggregator\clientaggregator.infrastructure\clientaggregator.infrastructure.csproj", "{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +113,18 @@ Global
 		{3349AFB1-B0A8-4D29-B4FB-2053E8ECD4DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3349AFB1-B0A8-4D29-B4FB-2053E8ECD4DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3349AFB1-B0A8-4D29-B4FB-2053E8ECD4DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A489BCEF-F969-4129-838F-A8A420D654D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A489BCEF-F969-4129-838F-A8A420D654D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A489BCEF-F969-4129-838F-A8A420D654D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A489BCEF-F969-4129-838F-A8A420D654D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA03CEE1-2512-4E43-B5D5-7F9D920C1C03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA03CEE1-2512-4E43-B5D5-7F9D920C1C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA03CEE1-2512-4E43-B5D5-7F9D920C1C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA03CEE1-2512-4E43-B5D5-7F9D920C1C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +146,10 @@ Global
 		{A0908E3F-113B-46BB-841C-58C9E6F59ECA} = {9F36AAEE-DC6A-4376-9D9E-427EAB145D92}
 		{CEC1A4A0-1D06-4B99-AF52-ED4DBAC9CD03} = {9F36AAEE-DC6A-4376-9D9E-427EAB145D92}
 		{3349AFB1-B0A8-4D29-B4FB-2053E8ECD4DE} = {C01438D3-120F-4C37-B024-EDEEF3176D12}
+		{A2367078-1144-42D2-B934-9D6EBA5D402A} = {53952453-C580-4FB0-8A37-DBF48B8285F5}
+		{A489BCEF-F969-4129-838F-A8A420D654D6} = {A2367078-1144-42D2-B934-9D6EBA5D402A}
+		{AA03CEE1-2512-4E43-B5D5-7F9D920C1C03} = {A2367078-1144-42D2-B934-9D6EBA5D402A}
+		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1} = {A2367078-1144-42D2-B934-9D6EBA5D402A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9963A4C-93AC-4FF6-B181-B2ECEAC236B3}

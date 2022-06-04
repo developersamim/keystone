@@ -289,8 +289,8 @@ public static class Config
                 },
                 new Client
                 {
-                    ClientId = "product.function",
-                    ClientName = "Product Function",
+                    ClientId = "clientaggregator.api",
+                    ClientName = "Client Aggregator API",
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("secret".Sha256())},
@@ -340,7 +340,7 @@ public static class Config
                     RequireConsent = true,
                     AllowPlainTextPkce = false
                 },
-                // blazor wasm AdminWebApp
+                // blazor wasm clientapp
                 new Client
                 {
                     ClientId = "blazorWASM",
@@ -349,7 +349,7 @@ public static class Config
                     RequireClientSecret = false,
                     AllowedCorsOrigins =
                     {
-                        "https://localhost:7186"
+                        "https://localhost:4001"
                     },
                     AllowedScopes =
                     {

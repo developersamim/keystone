@@ -1,15 +1,28 @@
-﻿using common.api.swagger;
+using clientaggregator.application;
+using clientaggregator.infrastructure;
+using clientaggregator.infrastructure.Settings;
+using common.api.authentication;
+using common.api.swagger;
 using common.exception;
+using common.infrastructure.Settings;
 using IdentityModel;
+using IdentityModel.Client;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using user.application;
-using user.domain;
-using user.infrastructure;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 var builder = WebApplication.CreateBuilder(args);
+
+ApiSetting apiSetting = builder.Configuration.GetSection("ApiSetting").Get<ApiSetting>();
+AuthenticationSetting authenticationSetting = builder.Configuration.GetSection("AuthenticationSetting").Get<AuthenticationSetting>();
+
 
 // Add services to the container.
 
@@ -17,12 +30,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
-
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "User API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Client Aggregator API", Version = "v1" });
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.OAuth2,
@@ -34,7 +44,7 @@ builder.Services.AddSwaggerGen(options =>
                 TokenUrl = new Uri(builder.Configuration["SwaggerConfiguration:Auth:TokenEndpoint"]),
                 Scopes = new Dictionary<string, string>
                 {
-                    {builder.Configuration["SwaggerConfiguration:Auth:Scopes:0"], "User API - full access" }
+                    {builder.Configuration["SwaggerConfiguration:Auth:Scopes:0"], "Client Aggregator API - full access" }
                 }
             }
         }
@@ -47,14 +57,9 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    //.AddIdentityServerAuthentication("Bearer", options =>
-    //{
-    //    options.ApiName = builder.Configuration["AuthenticationSetting:ApiName"];
-    //    options.Authority = builder.Configuration["AuthenticationSetting:Authority"];
-    //});
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["AuthenticationSetting:Authority"];
+        options.Authority = authenticationSetting.Authority;
 
         // if you are using API resources, you can specify the name here
         //options.Audience = "resource1";
@@ -65,6 +70,35 @@ builder.Services.AddAuthentication(options =>
 
         options.TokenValidationParameters.NameClaimType = JwtClaimTypes.Name;
     });
+
+builder.Services.AddAuthorization(e =>
+{
+    e.AddPolicy(AuthConstant.KnownAuthorizationPolicyName.ClientAccess, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("scope", AuthConstant.KnownScope.ClientAccess);
+    });
+});
+
+const string clientCredentialsTokenKey = "ClientAggregatorClientToken";
+
+builder.Services.AddAccessTokenManagement(options =>
+{
+    //var discovery = Common.Authentication.DiscoveryDocumentHelpers.GetDiscoveryDocument(services, AuthenticationSettings.Authority);
+
+    var request = new ClientCredentialsTokenRequest
+    {
+        //Address = discovery.TokenEndpoint,
+        Address = authenticationSetting.TokenEndpoint,
+        ClientId = authenticationSetting.ClientId,
+        ClientSecret = authenticationSetting.ClientSecret,
+        Scope = authenticationSetting.Scopes
+    };
+    options.Client.Clients.Add(clientCredentialsTokenKey, request);
+});
+
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureSerivces(apiSetting, clientCredentialsTokenKey);
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
@@ -86,10 +120,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "My User API V1");
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "My Client Aggregator API V1");
 
-        options.OAuthClientId("user_api_swagger");
-        options.OAuthAppName("User API - Swagger");
+        options.OAuthClientId("clientaggregator_api_swagger");
+        options.OAuthAppName("Client Aggregator API - Swagger");
         options.OAuthUsePkce();
     });
 }

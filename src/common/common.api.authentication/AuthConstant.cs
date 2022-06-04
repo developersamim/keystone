@@ -3,6 +3,10 @@ namespace common.api.authentication;
 
 public static class AuthConstant
 {
+    public static class KnownAuthorizationPolicyName
+    {
+        public const string ClientAccess = "ClientAccess";
+    }
 	public static class KnownScope
     {
         public const string ServerAccess = "server_access";
