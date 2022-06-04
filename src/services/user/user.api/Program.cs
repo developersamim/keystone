@@ -1,4 +1,5 @@
-﻿using common.api.swagger;
+﻿using common.api.authentication;
+using common.api.swagger;
 using common.exception;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
@@ -47,11 +48,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    //.AddIdentityServerAuthentication("Bearer", options =>
-    //{
-    //    options.ApiName = builder.Configuration["AuthenticationSetting:ApiName"];
-    //    options.Authority = builder.Configuration["AuthenticationSetting:Authority"];
-    //});
     .AddJwtBearer(options =>
     {
         options.Authority = builder.Configuration["AuthenticationSetting:Authority"];
@@ -65,6 +61,15 @@ builder.Services.AddAuthentication(options =>
 
         options.TokenValidationParameters.NameClaimType = JwtClaimTypes.Name;
     });
+
+builder.Services.AddAuthorization(e =>
+{
+    e.AddPolicy(AuthConstant.KnownAuthorizationPolicyName.ServerAccess, policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("scope", AuthConstant.KnownScope.ServerAccess);
+    });
+});
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>

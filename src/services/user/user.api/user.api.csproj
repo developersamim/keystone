@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\common\common.api.authentication\common.api.authentication.csproj" />
     <ProjectReference Include="..\..\..\common\common.api.swagger\common.api.swagger.csproj" />
     <ProjectReference Include="..\user.application\user.application.csproj" />
     <ProjectReference Include="..\user.infrastructure\user.infrastructure.csproj" />

@@ -10,7 +10,13 @@ namespace clientaggregator.infrastructure.Customer
     {
         public async Task<CustomerProfileDto> GetProfile(string userId)
         {
-            var response = await Client.GetAsync($"{ControllerUrl}/{userId}");
+            var keyValuePairs = new Dictionary<string, string>
+            {
+                { "userId", userId }
+            };
+            var url = QueryHelpers.AddQueryString($"{ControllerUrl}", keyValuePairs);
+
+            var response = await Client.GetAsync(url);
             var result = await ValidateResponse<CustomerProfileDto>(response);
             return result;
         }

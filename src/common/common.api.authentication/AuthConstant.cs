@@ -6,6 +6,7 @@ public static class AuthConstant
     public static class KnownAuthorizationPolicyName
     {
         public const string ClientAccess = "ClientAccess";
+        public const string ServerAccess = "ServerAccess";
     }
 	public static class KnownScope
     {

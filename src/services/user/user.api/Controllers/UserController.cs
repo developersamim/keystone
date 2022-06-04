@@ -1,4 +1,5 @@
-﻿using common.utilities;
+﻿using common.api.authentication;
+using common.utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace user.api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize]
+[Authorize(AuthConstant.KnownAuthorizationPolicyName.ServerAccess)]
 public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> logger;

@@ -1,6 +1,7 @@
 ﻿using clientaggregator.api.Models;
 using clientaggregator.application.Contracts.Models.Profile;
 using clientaggregator.application.Features.Profile.Commands.UpdateProfile;
+using clientaggregator.application.Features.Profile.Queries.GetProfile;
 using common.api.authentication;
 using common.utilities;
 using MediatR;
@@ -40,14 +41,14 @@ namespace clientaggregator.api.Controllers
             //var profile = await _profileService.GetProfile(User.UserId());
             //return Ok(profile);
 
-            //var query = new GetProfileQuery()
-            //{
-            //    UserId = User.UserId()
-            //};
+            var query = new GetProfileQuery()
+            {
+                UserId = User.UserId()
+            };
 
-            //await mediator.Send(query);
+            var result = await mediator.Send(query);
 
-            return Ok("all good");
+            return Ok(result);
         }
 
         /// <summary>
