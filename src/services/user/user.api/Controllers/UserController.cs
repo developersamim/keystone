@@ -55,8 +55,8 @@ public class UserController : ControllerBase
         return StatusCode(204);
     }
 
-    [HttpPut]
-    public async Task<ActionResult> UpdateProfileElement([FromQuery] string? userId, [FromBody] Dictionary<string, object> profileElements)
+    [HttpPut("{userId}")]
+    public async Task<ActionResult> UpdateProfileElement([FromRoute] string userId, [FromBody] Dictionary<string, object> profileElements)
     {
         if (userId is null)
             userId = User.UserId();
@@ -72,8 +72,8 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete]
-    public async Task<ActionResult> DeleteProfileElement([FromQuery] string? userId, [FromQuery] List<string> keys)
+    [HttpDelete("{userId}")]
+    public async Task<ActionResult> DeleteProfileElement([FromRoute] string? userId, [FromQuery] List<string> keys)
     {
         if (userId is null)
             userId = User.UserId();

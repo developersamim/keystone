@@ -1,9 +1,11 @@
-﻿using System;
+﻿using clientapp.Contracts;
+using clientapp.Models;
+using System;
 using System.Net.Http.Json;
 
 namespace clientapp.Services;
 
-public class UserService
+public class UserService : IUserService
 {
 	private HttpClient httpClient;
 	private const string ControllerUrl = "user";
@@ -19,6 +21,11 @@ public class UserService
 		response.EnsureSuccessStatusCode();
 
 		return await response.Content.ReadFromJsonAsync<List<UserProfileDto>>();
+    }
+
+	public async Task UpdateProfile(UserUpdateProfileDto request)
+    {
+		var response = await httpClient.PutAsJsonAsync($"{ControllerUrl}", request);
     }
 }
 

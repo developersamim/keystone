@@ -1,9 +1,10 @@
 ﻿@page "/fetchdata"
 @attribute [Authorize]
 
-@inject UserService userService;
+@inject IUserService userService;
 
 @using Microsoft.AspNetCore.Authorization
+@using clientapp.Contracts
 @using clientapp.Services
 
 <h1>Users</h1>

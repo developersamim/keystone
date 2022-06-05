@@ -16,7 +16,7 @@ namespace clientaggregator.api.Models
         [Required]
         public DateTime Birthdate { get; set; }
 
-        [Required]
+        //[Required]
         //[RegularExpression(@"^[0-9]{4}$", ErrorMessage = "Characters are not allowed.")]
         public string PostalCode { get; set; }
 

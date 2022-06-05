@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
 using clientapp.Services;
+using clientapp.Contracts;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -14,7 +15,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddTransient<CustomAuthorizationMessageHandler>();
-builder.Services.AddHttpClient<UserService>
+builder.Services.AddHttpClient<IUserService, UserService>
     (client =>
     {
         client.BaseAddress = new Uri("http://localhost:9000");

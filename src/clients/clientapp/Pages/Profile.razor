@@ -1,4 +1,7 @@
 ﻿@page "/profile"
+@using clientapp.Contracts
+@using clientapp.Models
+@inject IUserService UserService
 @attribute [Authorize]
 @*
 <PageTitle>Profile</PageTitle>*@
@@ -18,24 +21,64 @@
 </MudPaper>*@
 
 <MudCard>
-    <MudCardContent>
-        <div Style="text-align: center">
-            <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
-            <MudText>Samim Ahmed</MudText>
-            <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
-        </div>
-        <MudForm>
-            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="Email Address" />
-            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="First Name" />
-            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="Last Name" />
-            <MudTextField @bind-Value="creditCardNr" Immediate="true" Label="Date of Birth" />
-        </MudForm>
-    </MudCardContent>
+    <MudForm Model="@profileModel" @ref="@form">
+        <MudCardContent>
+            <div Style="text-align: center">
+                <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
+                <MudText>@string.Concat(profileModel.FirstName, " ", profileModel.LastName)</MudText>
+                <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
+            </div>
+            <MudForm>
+                <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" />
+                <MudTextField @bind-Value="profileModel.FirstName" Immediate="true" Label="First Name" />
+                <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" />
+                <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" />
+            </MudForm>
+        </MudCardContent>
+    </MudForm>
     <MudCardActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true">Save</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(async () => await Submit())">Save</MudButton>
     </MudCardActions>
+    
 </MudCard>
 
 @code {
-    string creditCardNr = "4012 8888 8888 1881";
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private ProfileModel profileModel { get; set; } = new ProfileModel();
+    MudForm form;
+    //profileModel.DateOfBirth = DateTime.Today;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+        var claims = authState.User.Claims;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            Console.WriteLine($"{user.Identity.Name} is authenticated.");
+            profileModel.Email = claims.FirstOrDefault(x => x.Type == "email").Value;
+            profileModel.FirstName = claims.FirstOrDefault(x => x.Type == "given_name").Value;
+            profileModel.LastName = claims.FirstOrDefault(x => x.Type == "family_name").Value;
+            profileModel.DateOfBirth = string.IsNullOrEmpty(claims.FirstOrDefault(x => x.Type == "dob")?.Value) ? null : DateTime.Parse(claims.FirstOrDefault(x => x.Type == "dob")?.Value);
+        }
+    }
+    public class ProfileModel
+    {
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime? DateOfBirth { get; set; } = new DateTime();
+    }
+    private async Task Submit()
+    {
+        var userUpdateProfileDto = new UserUpdateProfileDto
+        {
+            GivenName = profileModel.FirstName,
+            FamilyName = profileModel.LastName,
+            BirthDate = profileModel.DateOfBirth
+        };
+
+        await UserService.UpdateProfile(userUpdateProfileDto);
+    }
 }
