@@ -2,6 +2,7 @@
 @using clientapp.Contracts
 @using clientapp.Models
 @inject IUserService UserService
+@using System.ComponentModel.DataAnnotations
 @attribute [Authorize]
 @*
 <PageTitle>Profile</PageTitle>*@
@@ -20,33 +21,49 @@
     </MudContainer>
 </MudPaper>*@
 
-<MudCard>
-    <MudForm Model="@profileModel" @ref="@form">
-        <MudCardContent>
-            <div Style="text-align: center">
-                <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
-                <MudText>@string.Concat(profileModel.FirstName, " ", profileModel.LastName)</MudText>
-                <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
-            </div>
-            <MudForm>
-                <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" />
-                <MudTextField @bind-Value="profileModel.FirstName" Immediate="true" Label="First Name" />
-                <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" />
-                <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" />
-            </MudForm>
-        </MudCardContent>
-    </MudForm>
-    <MudCardActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(async () => await Submit())">Save</MudButton>
-    </MudCardActions>
+<EditForm Model="@profileModel" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <MudCard>
+            <MudCardContent>
+                <div Style="text-align: center">
+                    <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
+                    <MudText>@string.Concat(profileModel.FirstName, " ", profileModel.LastName)</MudText>
+                    <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
+                </div>
+                @*<MudForm>*@
+                    <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" />
+                    <MudTextField @bind-Value="profileModel.FirstName" Immediate="true" Label="First Name" For="@(() => profileModel.FirstName)" />
+                    <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" />
+                    <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" />
+                @*</MudForm>*@
+            </MudCardContent>
+        <MudCardActions>
+            @*<MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(async () => await Submit())">Save</MudButton>*@
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+        </MudCardActions>
     
-</MudCard>
+    </MudCard>
+    <MudPaper Class="pa-4 mud-height-full">
+            <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+            @if (success)
+            {
+                <MudText Color="Color.Success">Success</MudText>
+            }
+            else
+            {
+                <MudText Color="@Color.Error">
+                    <ValidationSummary />
+                </MudText>
+            }
+        </MudPaper>
+</EditForm>
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     private ProfileModel profileModel { get; set; } = new ProfileModel();
-    MudForm form;
+    //MudForm form;
     //profileModel.DateOfBirth = DateTime.Today;
+    bool success;
 
     protected override async Task OnInitializedAsync()
     {
@@ -66,6 +83,8 @@
     public class ProfileModel
     {
         public string Email { get; set; }
+        [Required]
+        [StringLength(8, ErrorMessage = "FirstName length can't be more than 8.")]
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? DateOfBirth { get; set; } = new DateTime();
@@ -80,5 +99,11 @@
         };
 
         await UserService.UpdateProfile(userUpdateProfileDto);
+    }
+
+    private void OnValidSubmit(EditContext context)
+    {
+        success = true;
+        StateHasChanged();
     }
 }
