@@ -1,4 +1,6 @@
 ﻿@page "/profile"
+@using FluentValidation
+@using System.Globalization
 @using clientapp.Contracts
 @using clientapp.Models
 @inject IUserService UserService
@@ -7,23 +9,8 @@
 @*
 <PageTitle>Profile</PageTitle>*@
 
-@*<MudPaper Height="100%" Width="100%">
-    <MudContainer Fixed="true">
-        <MudCard>
-            <MudCardContent>
-                <MudText>Story of the day</MudText>
-                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton Variant="Variant.Text" Color="Color.Primary">Learn More</MudButton>
-            </MudCardActions>
-        </MudCard>
-    </MudContainer>
-</MudPaper>*@
-
-<EditForm Model="@profileModel" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator/>
     <MudCard>
+        <MudForm Model="@profileModel" @ref="@form" Validation="@(profileValidator.ValidateValue)" ValidationDelay="0">
             <MudCardContent>
                 <div Style="text-align: center">
                     <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
@@ -31,39 +18,26 @@
                     <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
                 </div>
                 @*<MudForm>*@
-                    <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" />
+                    <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" For="@(() => profileModel.Email)" Disabled="true" />
                     <MudTextField @bind-Value="profileModel.FirstName" Immediate="true" Label="First Name" For="@(() => profileModel.FirstName)" />
-                    <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" />
-                    <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" />
+                    <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" For="@(() => profileModel.LastName)" />
+                    <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" For="@(() => profileModel.DateOfBirth)"/>
                 @*</MudForm>*@
             </MudCardContent>
+        </MudForm>
         <MudCardActions>
-            @*<MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(async () => await Submit())">Save</MudButton>*@
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(async () => await Submit())">Save</MudButton>
         </MudCardActions>
     
     </MudCard>
-    <MudPaper Class="pa-4 mud-height-full">
-            <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
-            @if (success)
-            {
-                <MudText Color="Color.Success">Success</MudText>
-            }
-            else
-            {
-                <MudText Color="@Color.Error">
-                    <ValidationSummary />
-                </MudText>
-            }
-        </MudPaper>
-</EditForm>
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     private ProfileModel profileModel { get; set; } = new ProfileModel();
-    //MudForm form;
-    //profileModel.DateOfBirth = DateTime.Today;
+    MudForm form;
     bool success;
+
+    ProfileModelFluentValidator profileValidator = new ProfileModelFluentValidator();
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,20 +51,22 @@
             profileModel.Email = claims.FirstOrDefault(x => x.Type == "email").Value;
             profileModel.FirstName = claims.FirstOrDefault(x => x.Type == "given_name").Value;
             profileModel.LastName = claims.FirstOrDefault(x => x.Type == "family_name").Value;
-            profileModel.DateOfBirth = string.IsNullOrEmpty(claims.FirstOrDefault(x => x.Type == "dob")?.Value) ? null : DateTime.Parse(claims.FirstOrDefault(x => x.Type == "dob")?.Value);
+            var dob = claims.FirstOrDefault(x => x.Type == "birthdate")?.Value;
+            var parsedDate = DateTime.Parse(dob);
+            profileModel.DateOfBirth = parsedDate;
         }
     }
     public class ProfileModel
     {
         public string Email { get; set; }
-        [Required]
-        [StringLength(8, ErrorMessage = "FirstName length can't be more than 8.")]
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? DateOfBirth { get; set; } = new DateTime();
     }
     private async Task Submit()
     {
+        await form.Validate();
+
         var userUpdateProfileDto = new UserUpdateProfileDto
         {
             GivenName = profileModel.FirstName,
@@ -101,9 +77,33 @@
         await UserService.UpdateProfile(userUpdateProfileDto);
     }
 
-    private void OnValidSubmit(EditContext context)
+    /// <summary>
+    /// A standard AbstractValidator which contains multiple rules and can be shared with the back end API
+    /// </summary>
+    /// <typeparam name="ProfileModel"></typeparam>
+    public class ProfileModelFluentValidator : AbstractValidator<ProfileModel>
     {
-        success = true;
-        StateHasChanged();
+        public ProfileModelFluentValidator()
+        {
+            RuleFor(x => x.Email)
+                .NotEmpty()
+                .Length(1, 100);
+            RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .Length(1,50);
+            RuleFor(x => x.LastName)
+                .NotEmpty()
+                .Length(1, 50);
+            RuleFor(x => x.DateOfBirth)
+                .NotEmpty();
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<ProfileModel>.CreateWithOptions((ProfileModel)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
     }
 }
