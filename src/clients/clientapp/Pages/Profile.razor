@@ -6,36 +6,34 @@
 @inject IUserService UserService
 @using System.ComponentModel.DataAnnotations
 @attribute [Authorize]
-@*
-<PageTitle>Profile</PageTitle>*@
 
-    <MudCard>
-        <MudForm Model="@profileModel" @ref="@form" Validation="@(profileValidator.ValidateValue)" ValidationDelay="0">
-            <MudCardContent>
-                <div Style="text-align: center">
-                    <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
-                    <MudText>@string.Concat(profileModel.FirstName, " ", profileModel.LastName)</MudText>
-                    <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
-                </div>
-                @*<MudForm>*@
-                    <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" For="@(() => profileModel.Email)" Disabled="true" />
-                    <MudTextField @bind-Value="profileModel.FirstName" Immediate="true" Label="First Name" For="@(() => profileModel.FirstName)" />
-                    <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" For="@(() => profileModel.LastName)" />
-                    <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" For="@(() => profileModel.DateOfBirth)"/>
-                @*</MudForm>*@
-            </MudCardContent>
-        </MudForm>
-        <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" OnClick="@(async () => await Submit())">Save</MudButton>
-        </MudCardActions>
+@*<MudCard Style="box-shadow: 0 !important">*@
+    <MudForm Model="@profileModel" @ref="@form" Validation="@(profileValidator.ValidateValue)" ValidationDelay="0">
+        <MudCardContent>
+            <div Style="text-align: center">
+                <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px"/>
+                <MudText>@string.Concat(profileModel.FirstName, " ", profileModel.LastName)</MudText>
+                <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
+            </div>
+            <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" For="@(() => profileModel.Email)" Disabled="true" />
+            <MudTextField @bind-Value="profileModel.FirstName" Immediate="true" Label="First Name" For="@(() => profileModel.FirstName)" />
+            <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" For="@(() => profileModel.LastName)" />
+            <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" For="@(() => profileModel.DateOfBirth)"/>
+        </MudCardContent>
+    </MudForm>
+
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" disabled="@(!form.IsTouched)" OnClick="@(async () => await Submit())">Save</MudButton>
+    </MudCardActions>
     
-    </MudCard>
+@*</MudCard>*@
 
 @code {
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     private ProfileModel profileModel { get; set; } = new ProfileModel();
     MudForm form;
     bool success;
+    [Inject] ISnackbar Snackbar { get; set; }
 
     ProfileModelFluentValidator profileValidator = new ProfileModelFluentValidator();
 
@@ -74,7 +72,16 @@
             BirthDate = profileModel.DateOfBirth
         };
 
-        await UserService.UpdateProfile(userUpdateProfileDto);
+        try
+        {
+            await UserService.UpdateProfile(userUpdateProfileDto);            
+
+            Snackbar.Add("Submited!", MudBlazor.Severity.Success);
+        }
+        catch(Exception ex)
+        {
+            Snackbar.Add("Profile update unsuccessful!", MudBlazor.Severity.Error);
+        }
     }
 
     /// <summary>
