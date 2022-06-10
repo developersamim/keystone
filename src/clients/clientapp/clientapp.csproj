@@ -6,6 +6,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(RunConfiguration)' == 'ClientApp' ">
+	  <ExternalConsole>true</ExternalConsole>
+	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="FluentValidation" Version="11.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.4" />
@@ -15,7 +18,17 @@
         <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
 		<PackageReference Include="MudBlazor" Version="6.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
 	</ItemGroup>
 	
 	
+	<ItemGroup>
+	  <None Remove="Infrastructure\" />
+	  <None Remove="Infrastructure\Contracts\" />
+	  <None Remove="Microsoft.AspNetCore.WebUtilities" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Infrastructure\" />
+	  <Folder Include="Infrastructure\Contracts\" />
+	</ItemGroup>
 </Project>

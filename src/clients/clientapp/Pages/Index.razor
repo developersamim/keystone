@@ -1,12 +1,22 @@
 ﻿@page "/"
+@using clientapp.Infrastructure.Contracts
+
+
+@inject NavigationManager Navigation
 
 <PageTitle>Index</PageTitle>
 
 <h1>Hello, world!</h1>
 
 <div class="alert alert-warning" role="alert">
-    <a href="authentication/register">Register</a>
-
+    <button @onclick="BeginRegistration">Join Student Network</button>
 </div>
 
 Welcome to your new app.
+
+@code {
+    private async Task BeginRegistration(MouseEventArgs args)
+    {
+        Navigation.NavigateTo("authentication/login");
+    }
+}

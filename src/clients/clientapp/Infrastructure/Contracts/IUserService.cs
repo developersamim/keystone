@@ -1,6 +1,6 @@
 ﻿using clientapp.Models;
 
-namespace clientapp.Contracts;
+namespace clientapp.Infrastructure.Contracts;
 
 public interface IUserService
 {

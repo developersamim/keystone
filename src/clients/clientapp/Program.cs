@@ -4,9 +4,13 @@ using clientapp;
 using MudBlazor.Services;
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
-using clientapp.Services;
-using clientapp.Contracts;
+using clientapp.Infrastructure;
+using clientapp.Infrastructure.Contracts;
 using MudBlazor;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using System.Net.Http;
+using System;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -15,6 +19,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddBlazoredSessionStorage();
+
 builder.Services.AddTransient<CustomAuthorizationMessageHandler>();
 builder.Services.AddHttpClient<IUserService, UserService>
     (client =>
@@ -23,14 +28,15 @@ builder.Services.AddHttpClient<IUserService, UserService>
     })
     .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
 
-//builder.Services.AddScoped(
-//sp => sp.GetService<IHttpClientFactory>().CreateClient("userApi"));
+builder.Services.AddScoped(
+sp => sp.GetService<IHttpClientFactory>().CreateClient("userApi"));
 
 builder.Services.AddOidcAuthentication(options =>
 {
     // Configure your authentication provider options here.
     // For more information, see https://aka.ms/blazor-standalone-auth
     builder.Configuration.Bind("oidc", options.ProviderOptions);
+    //options.AuthenticationPaths.RemoteRegisterPath = "Account/Register";
 });
 
 builder.Services.AddMudServices(config =>

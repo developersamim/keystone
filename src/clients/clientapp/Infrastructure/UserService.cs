@@ -1,9 +1,9 @@
-﻿using clientapp.Contracts;
+﻿using clientapp.Infrastructure.Contracts;
 using clientapp.Models;
 using System;
 using System.Net.Http.Json;
 
-namespace clientapp.Services;
+namespace clientapp.Infrastructure;
 
 public class UserService : IUserService
 {
