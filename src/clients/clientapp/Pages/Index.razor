@@ -3,20 +3,35 @@
 
 
 @inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
 
-<PageTitle>Index</PageTitle>
+<PageTitle>KS</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudContainer Class="mt-16" MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Connect with educational community</MudText>
+    <MudText Typo="Typo.h6" Align="Align.Center" GutterBottom="true">UniSalad is a student-only platform where you can connect with other students from the same university, ask questions, share advice and solve your everyday needs. The app is made up of 5 categories: Q & A, Buy & Sell, Lost & Found, Housing and Travel, for you to easily filter through to find exactly what you need whilst at university.</MudText>
+    
+    <div style="text-align: center; margin-top: 10px">
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="BeginRegistration" Style="font-size: 16px; padding:15px 30px">Join<MudIcon Icon="@Icons.Filled.ArrowForward" Title="Start" /></MudButton>
+    </div>
+</MudContainer>
 
-<div class="alert alert-warning" role="alert">
-    <button @onclick="BeginRegistration">Join Student Network</button>
-</div>
+    
 
-Welcome to your new app.
 
-@code {
-    private async Task BeginRegistration(MouseEventArgs args)
-    {
-        Navigation.NavigateTo("authentication/login");
+    @code {
+        private async Task BeginRegistration(MouseEventArgs args)
+        {
+            Navigation.NavigateTo("authentication/login");
+            //Navigation.NavigateTo("https://localhost:7001/account/login?returnUrl=https://localhost:4001");
+
+            //var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+            @*var returnUrl = NavigationManager.Uri;
+                 Console.WriteLine($"returnUrl: {returnUrl}");
+                 returnUrl = $"~/{returnUrl}user=student";
+                 Console.WriteLine($"returnUrl1: {returnUrl}");
+                 //returnUrl = Uri.EscapeDataString(returnUrl);
+                 NavigationManager.NavigateTo($"https://localhost:7001/account/register?returnUrl={returnUrl}",
+                forceLoad: true);*@
+        }
     }
-}

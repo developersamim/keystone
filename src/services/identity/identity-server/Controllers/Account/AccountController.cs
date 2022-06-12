@@ -302,13 +302,15 @@ namespace IdentityServerHost.Quickstart.UI
                 }
 
                 // request for a local page
-                if (Url.IsLocalUrl(userModel.ReturnUrl))
-                    return Redirect(userModel.ReturnUrl);
-                else if (string.IsNullOrEmpty(userModel.ReturnUrl))
-                    return View("RegistrationSuccess");
-                else
-                    // user might have clicked on a malicious link - should be logged
-                    throw new Exception("invalid return URL");
+                //if (Url.IsLocalUrl(userModel.ReturnUrl))
+                //    return Redirect(userModel.ReturnUrl);
+                //else if (string.IsNullOrEmpty(userModel.ReturnUrl))
+                //    return View("RegistrationSuccess");
+                //else
+                //    // user might have clicked on a malicious link - should be logged
+                //    throw new Exception("invalid return URL");
+
+                return Redirect("~/Account/Login");
             }
 
             foreach(var error in result.Errors)

@@ -8,12 +8,56 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
+<!--<MudLayout>
     <MudAppBar Elevation="0">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <AuthorizeView>
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        </AuthorizeView>
+
+        <h1>KeyStone</h1>-->
+
+        @*<MudSpacer />*@
+        @*<MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />*@
+        @*<LoginDisplay />*@
+        <!--<AuthorizeView>
+            <MudMenu>
+                <ActivatorContent>
+                    <MudAvatar Image="images/toiletvisit.jpg" />
+                </ActivatorContent>
+                <ChildContent>
+                    <MudMenuItem Href="/profile">Profile</MudMenuItem>
+                    <MudMenuItem @onclick="BeginSignOut">Sign Out</MudMenuItem>
+                </ChildContent>
+            </MudMenu>
+        </AuthorizeView>
+
+
+    </MudAppBar>
+    <AuthorizeView>
+        <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
+            <MudDrawerHeader>
+                <MudText Typo="Typo.h6">clientapp</MudText>
+            </MudDrawerHeader>
+            <NavMenu />
+        </MudDrawer>
+    </AuthorizeView>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16" Style="margin-top:30px !important; margin-bottom: 10px !important">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>-->
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+
+        <AuthorizeView>
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        </AuthorizeView>
+
+        <MudText Typo="Typo.h5" Class="ml-3">KeyStone</MudText>
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" />
-        <LoginDisplay />
+
         <AuthorizeView>
             <MudMenu>
                 <ActivatorContent>
@@ -26,18 +70,16 @@
             </MudMenu>
         </AuthorizeView>
         
-
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
-        <MudDrawerHeader>
-            <MudText Typo="Typo.h6">clientapp</MudText>
-        </MudDrawerHeader>
-        <NavMenu />
-    </MudDrawer>
+
+    <AuthorizeView>
+        <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+            <NavMenu />
+        </MudDrawer>
+    </AuthorizeView>
+    
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16" Style="margin-top:30px !important; margin-bottom: 10px !important">
-            @Body
-        </MudContainer>
+        @Body
     </MudMainContent>
 </MudLayout>
 

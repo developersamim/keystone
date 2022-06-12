@@ -36,7 +36,8 @@ builder.Services.AddOidcAuthentication(options =>
     // Configure your authentication provider options here.
     // For more information, see https://aka.ms/blazor-standalone-auth
     builder.Configuration.Bind("oidc", options.ProviderOptions);
-    //options.AuthenticationPaths.RemoteRegisterPath = "Account/Register";
+    options.AuthenticationPaths.RemoteRegisterPath = "Account/Register";
+    options.ProviderOptions.AdditionalProviderParameters.Add("bypass", "true");
 });
 
 builder.Services.AddMudServices(config =>

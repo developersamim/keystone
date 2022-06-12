@@ -29,7 +29,7 @@ public class CustomAuthorizationMessageHandler : DelegatingHandler
 
     public async Task<string> GetAccessToken()
     {
-        var tokenString = await sessionStorageService.GetItemAsync<string>("oidc.user:https://localhost:6001/:blazorWASM");
+        var tokenString = await sessionStorageService.GetItemAsync<string>("oidc.user:https://localhost:7001/:blazorWASM");
         var jDoc = JsonDocument.Parse(tokenString);
         var accessToken = jDoc.RootElement.GetProperty("access_token");
         Console.WriteLine($"mytoken: {accessToken}");

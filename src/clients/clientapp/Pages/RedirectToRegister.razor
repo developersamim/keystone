@@ -1,0 +1,11 @@
+﻿@inject NavigationManager NavigationManager
+
+@code{
+    protected override void OnInitialized()
+    {
+        var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        returnUrl = "~/" + returnUrl;
+        NavigationManager.NavigateTo($"https://localhost:7001/account/register?returnUrl={returnUrl}",
+           forceLoad: true);
+    }
+}
