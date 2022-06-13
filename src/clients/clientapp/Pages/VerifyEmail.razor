@@ -1,0 +1,88 @@
+﻿@page "/verifyemail"
+@layout EmptyLayout
+
+@using FluentValidation
+@using clientapp.Infrastructure.Contracts
+
+
+@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
+
+<PageTitle>KS</PageTitle>
+
+<MudGrid Justify="Justify.Center" Style="padding-top: 40px">
+    <MudItem xs="12" sm="4">
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Verify your email</MudText>
+
+        <MudForm Model="@verifyEmailModel" @ref="@form" Validation="@(verifyEmailValidator.ValidateValue)" ValidationDelay="0">
+            <MudCardContent>
+                <MudText Align="Align.Center">We have sent you a code to your email address @emailAddress</MudText>
+                <MudTextField @bind-Value="verifyEmailModel.Code" Immediate="true" Label="Enter Code" For="@(() => verifyEmailModel.Code)" />
+            </MudCardContent>
+        </MudForm>
+
+        <MudCardActions>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" disabled="@(!form.IsTouched || !form.IsValid)" OnClick="@(async () => await Submit())">Verify</MudButton>
+        </MudCardActions>
+    </MudItem>
+</MudGrid>
+    
+@*</MudContainer>*@
+
+
+
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [Inject] ISnackbar Snackbar { get; set; }
+    private VerifyEmailModel verifyEmailModel { get; set; } = new VerifyEmailModel();
+    private VerifyEmailModelFluentValidator verifyEmailValidator = new VerifyEmailModelFluentValidator();
+    private string emailAddress { get; set; }
+
+    MudForm form;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+        var claims = authState.User.Claims;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var isVerified = claims.FirstOrDefault(x => x.Type == "email_verified").Value;
+            emailAddress = claims.FirstOrDefault(x => x.Type == "email").Value;
+        }
+    }
+
+    public class VerifyEmailModel
+    {
+        public string Code { get; set; }
+    }
+
+    private async Task Submit()
+    {
+
+    }
+
+    /// <summary>
+    /// A standard AbstractValidator which contains multiple rules and can be shared with the back end API
+    /// </summary>
+    /// <typeparam name="VerifyEmailModel"></typeparam>
+    public class VerifyEmailModelFluentValidator : AbstractValidator<VerifyEmailModel>
+    {
+        public VerifyEmailModelFluentValidator()
+        {
+            RuleFor(x => x.Code)
+                .NotEmpty()
+                .Length(1, 5);
+        }
+
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<VerifyEmailModel>.CreateWithOptions((VerifyEmailModel)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+}

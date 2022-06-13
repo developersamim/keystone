@@ -37,7 +37,8 @@ builder.Services.AddOidcAuthentication(options =>
     // For more information, see https://aka.ms/blazor-standalone-auth
     builder.Configuration.Bind("oidc", options.ProviderOptions);
     options.AuthenticationPaths.RemoteRegisterPath = "Account/Register";
-    options.ProviderOptions.AdditionalProviderParameters.Add("bypass", "true");
+    //options.ProviderOptions.AdditionalProviderParameters.Add("bypass", "true");
+    options.ProviderOptions.RedirectUri = "https://localhost:4001/verifyemail";
 });
 
 builder.Services.AddMudServices(config =>
