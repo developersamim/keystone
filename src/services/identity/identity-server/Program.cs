@@ -2,6 +2,8 @@ using identity_server.Extension;
 using identity_server.IdentityServerConfig;
 using identity_server.Infrastructure;
 using identity_server.Models;
+using identity_server.Services;
+using identity_server.Settings;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using IdentityServer4.Validation;
@@ -9,6 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+EmailSetting emailSetting = builder.Configuration.GetSection("EmailSetting").Get<EmailSetting>();
+builder.Services.AddSingleton(emailSetting);
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 // Add services to the container.
 

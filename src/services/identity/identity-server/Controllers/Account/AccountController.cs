@@ -4,6 +4,7 @@
 
 using AutoMapper;
 using identity_server.Models;
+using identity_server.Services;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Events;
@@ -42,6 +43,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IEventService _events;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender emailSender;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
@@ -50,7 +52,8 @@ namespace IdentityServerHost.Quickstart.UI
             IEventService events,
             SignInManager<ApplicationUser> signInManager,
             IMapper mapper,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            IEmailSender emailSender
             )
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
@@ -63,6 +66,7 @@ namespace IdentityServerHost.Quickstart.UI
             _events = events;
             _mapper = mapper;
             _userManager = userManager;
+            this.emailSender = emailSender;
         }
 
         /// <summary>
@@ -274,6 +278,15 @@ namespace IdentityServerHost.Quickstart.UI
 
             var user = _mapper.Map<ApplicationUser>(userModel);
 
+            // send email to user with unique code
+            // so that user can verify their email
+            var usersToBeEmailed = new Dictionary<string, string>
+                {
+                    { userModel.FirstName, user.Email }
+                };
+            var message = new EmailMessage(usersToBeEmailed, "Test email", "This is the content from our email. 12345");
+            emailSender.SendEmail(message);
+
             var result = await _userManager.CreateAsync(user, userModel.Password);
 
             if (result.Succeeded)
@@ -288,7 +301,9 @@ namespace IdentityServerHost.Quickstart.UI
                     //new Claim(JwtClaimTypes.Role, )
                 });
 
-                if(context != null)
+                
+
+                if (context != null)
                 {
                     if (context.IsNativeClient())
                     {

@@ -21,6 +21,7 @@
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,12 +39,17 @@
     <None Remove="Mappings\" />
     <None Remove="AutoMapper" />
     <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="Settings\" />
+    <None Remove="NETCore.MailKit" />
+    <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IdentityServerConfig\" />
     <Folder Include="Extension\" />
     <Folder Include="Models\" />
     <Folder Include="Mappings\" />
+    <Folder Include="Settings\" />
+    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\common\common.api.authentication\common.api.authentication.csproj">
