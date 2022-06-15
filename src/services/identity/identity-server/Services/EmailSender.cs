@@ -27,8 +27,8 @@ public class EmailSender : IEmailSender
         bodyBuilder.HtmlBody += "<div style=\"border-style:ridge;padding:15px 30px;\">";
         bodyBuilder.HtmlBody += "<h1 style=\"margin-bottom:30px;\">Your email verificaiton code for KeyStone</h1>";
         bodyBuilder.HtmlBody += "<p style=\"margin-bottom:15px;\">Use this code to verify your email<p>\n";
-        bodyBuilder.HtmlBody += "<span style=\"background-color:powderblue;padding:5px 10px;margin-bottom:20px\">12345</span>";
-        bodyBuilder.HtmlBody += "<hr style=\"margin-bottom:15px\">";
+        bodyBuilder.HtmlBody += "<span style=\"background-color:powderblue;padding:5px 10px;\">12345</span>";
+        bodyBuilder.HtmlBody += "<hr style=\"margin-bottom:15px;margin-top:40px;\">";
         bodyBuilder.HtmlBody += "<p style=\"color:gray;\">KeyStone</p>";
         bodyBuilder.HtmlBody += "</div>";
         bodyBuilder.HtmlBody += "</div>";
