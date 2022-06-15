@@ -284,7 +284,7 @@ namespace IdentityServerHost.Quickstart.UI
                 {
                     { userModel.FirstName, user.Email }
                 };
-            var message = new EmailMessage(usersToBeEmailed, "Test email", "This is the content from our email. 12345");
+            var message = new EmailMessage(usersToBeEmailed, "Code for KeyStone", "Use this code to verify your email \n 12345");
             emailSender.SendEmail(message);
 
             var result = await _userManager.CreateAsync(user, userModel.Password);
@@ -297,9 +297,8 @@ namespace IdentityServerHost.Quickstart.UI
                     new Claim(JwtClaimTypes.FamilyName, userModel.LastName),
                     new Claim(KnownUserClaim.CreateDate, DateTimeOffset.UtcNow.ToString("o")),
                     //new Claim(KnownUserClaim.UserName, user.UserName),
-                    new Claim(KnownUserClaim.Deposit, "0")
-                    //new Claim(JwtClaimTypes.Role, )
-                });
+                    new Claim(JwtClaimTypes.EmailVerified, false.ToString())
+                }); ;
 
                 
 

@@ -22,12 +22,23 @@ public class EmailSender : IEmailSender
 
     private MimeMessage CreateEmailMessage(EmailMessage message)
     {
+        var bodyBuilder = new BodyBuilder();
+        bodyBuilder.HtmlBody = "<div style=\"padding-left:100px;\">";
+        bodyBuilder.HtmlBody += "<div style=\"border-style:ridge;padding:15px 30px;\">";
+        bodyBuilder.HtmlBody += "<h1 style=\"margin-bottom:30px;\">Your email verificaiton code for KeyStone</h1>";
+        bodyBuilder.HtmlBody += "<p style=\"margin-bottom:15px;\">Use this code to verify your email<p>\n";
+        bodyBuilder.HtmlBody += "<span style=\"background-color:powderblue;padding:5px 10px;margin-bottom:20px\">12345</span>";
+        bodyBuilder.HtmlBody += "<hr style=\"margin-bottom:15px\">";
+        bodyBuilder.HtmlBody += "<p style=\"color:gray;\">KeyStone</p>";
+        bodyBuilder.HtmlBody += "</div>";
+        bodyBuilder.HtmlBody += "</div>";
+
         var emailMessage = new MimeMessage();
         //emailMessage.From.Add(new MailboxAddress(emailSetting.From));
         emailMessage.From.Add(new MailboxAddress("email", emailSetting.From));
         emailMessage.To.AddRange(message.To);
         emailMessage.Subject = message.Subject;
-        emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text) { Text = message.Content };
+        emailMessage.Body = bodyBuilder.ToMessageBody();
         return emailMessage;
     }
     private void Send(MimeMessage mailMessage)

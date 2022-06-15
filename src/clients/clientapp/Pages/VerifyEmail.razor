@@ -1,5 +1,6 @@
 ﻿@page "/verifyemail"
 @layout EmptyLayout
+@attribute [Authorize]
 
 @using FluentValidation
 @using clientapp.Infrastructure.Contracts
@@ -12,28 +13,34 @@
 
 <MudGrid Justify="Justify.Center" Style="padding-top: 40px">
     <MudItem xs="12" sm="4">
-        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Verify your email</MudText>
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Check your email</MudText>
 
         <MudForm Model="@verifyEmailModel" @ref="@form" Validation="@(verifyEmailValidator.ValidateValue)" ValidationDelay="0">
             <MudCardContent>
-                <MudText Align="Align.Center">We have sent you a code to your email address @emailAddress</MudText>
-                <MudTextField @bind-Value="verifyEmailModel.Code" Immediate="true" Label="Enter Code" For="@(() => verifyEmailModel.Code)" />
+                <MudText Align="Align.Center">We have sent you a code.</MudText>
+                <MudText Align="Align.Center" Style="margin-bottom: 20px">Please check your inbox at @emailAddress</MudText>
+                <MudTextField @bind-Value="verifyEmailModel.Code" Immediate="true" Label="Enter Code" For="@(() => verifyEmailModel.Code)" Style="padding-top:20px" />
             </MudCardContent>
         </MudForm>
 
         <MudCardActions>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" disabled="@(!form.IsTouched || !form.IsValid)" OnClick="@(async () => await Submit())">Verify</MudButton>
+
         </MudCardActions>
+        <div style="text-align: center; margin-top: 30px">
+            <MudLink Href="/" Align="center">Back to Home</MudLink>
+        </div>
+
     </MudItem>
 </MudGrid>
-    
+
 @*</MudContainer>*@
 
 
 
 
 @code {
-    [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
+    [CascadingParameter] protected Task<AuthenticationState> AuthenticationStateTask { get; set; }
     [Inject] ISnackbar Snackbar { get; set; }
     private VerifyEmailModel verifyEmailModel { get; set; } = new VerifyEmailModel();
     private VerifyEmailModelFluentValidator verifyEmailValidator = new VerifyEmailModelFluentValidator();
@@ -41,11 +48,10 @@
 
     MudForm form;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        var authState = await authenticationStateTask;
-        var user = authState.User;
-        var claims = authState.User.Claims;
+        var user = (await AuthenticationStateTask).User;
+        var claims = user.Claims;
 
         if (user.Identity.IsAuthenticated)
         {
