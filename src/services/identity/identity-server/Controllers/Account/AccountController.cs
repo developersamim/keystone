@@ -3,6 +3,7 @@
 
 
 using AutoMapper;
+using identity_server.Infrastructure.Repositories;
 using identity_server.Models;
 using identity_server.Services;
 using IdentityModel;
@@ -44,6 +45,7 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender emailSender;
+        private readonly IVerifyEmailRepository verifyEmailRepository;
 
         public AccountController(
             IIdentityServerInteractionService interaction,
@@ -53,7 +55,8 @@ namespace IdentityServerHost.Quickstart.UI
             SignInManager<ApplicationUser> signInManager,
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            IVerifyEmailRepository verifyEmailRepository
             )
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
@@ -67,6 +70,7 @@ namespace IdentityServerHost.Quickstart.UI
             _mapper = mapper;
             _userManager = userManager;
             this.emailSender = emailSender;
+            this.verifyEmailRepository = verifyEmailRepository;
         }
 
         /// <summary>
@@ -278,15 +282,6 @@ namespace IdentityServerHost.Quickstart.UI
 
             var user = _mapper.Map<ApplicationUser>(userModel);
 
-            // send email to user with unique code
-            // so that user can verify their email
-            var usersToBeEmailed = new Dictionary<string, string>
-                {
-                    { userModel.FirstName, user.Email }
-                };
-            var message = new EmailMessage(usersToBeEmailed, "Code for KeyStone", "Use this code to verify your email \n 12345");
-            emailSender.SendEmail(message);
-
             var result = await _userManager.CreateAsync(user, userModel.Password);
 
             if (result.Succeeded)
@@ -300,7 +295,22 @@ namespace IdentityServerHost.Quickstart.UI
                     new Claim(JwtClaimTypes.EmailVerified, false.ToString())
                 }); ;
 
-                
+
+                // create VerifyEmail row
+                var verifyEmailEntity = new VerifyEmail(user.Id);
+                verifyEmailRepository.InsertVerifyEmail(verifyEmailEntity);
+
+
+                // send email to user with unique code
+                // so that user can verify their email
+                var usersToBeEmailed = new Dictionary<string, string>
+                {
+                    { userModel.FirstName, user.Email }
+                };
+                var message = new EmailMessage(usersToBeEmailed, verifyEmailEntity.Code);
+                emailSender.SendEmail(message);
+
+
 
                 if (context != null)
                 {

@@ -42,6 +42,7 @@
     <None Remove="Settings\" />
     <None Remove="NETCore.MailKit" />
     <None Remove="Services\" />
+    <None Remove="Infrastructure\Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IdentityServerConfig\" />
@@ -50,6 +51,7 @@
     <Folder Include="Mappings\" />
     <Folder Include="Settings\" />
     <Folder Include="Services\" />
+    <Folder Include="Infrastructure\Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\common\common.api.authentication\common.api.authentication.csproj">

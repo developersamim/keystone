@@ -1,6 +1,7 @@
 using identity_server.Extension;
 using identity_server.IdentityServerConfig;
 using identity_server.Infrastructure;
+using identity_server.Infrastructure.Repositories;
 using identity_server.Models;
 using identity_server.Services;
 using identity_server.Settings;
@@ -69,6 +70,8 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddTransient<IRedirectUriValidator, SwaggerDevelopmentRedirectValidator>();
 }
+
+builder.Services.AddScoped<IVerifyEmailRepository, VerifyEmailRepository>();
 
 var app = builder.Build();
 
