@@ -21,6 +21,7 @@ public static class InfrastructureServiceRegistration
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserClaimRepository, UserClaimRepository>();
+        services.AddScoped<IVerifyEmailRepository, VerifyEmailRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
 
         services.AddDbContext<ApplicationDbContext>(options =>

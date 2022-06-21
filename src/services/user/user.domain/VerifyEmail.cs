@@ -1,7 +1,6 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace identity_server.Models;
+namespace user.domain;
 
 public class VerifyEmail
 {
@@ -20,28 +19,11 @@ public class VerifyEmail
 
 	[NotMapped]
 	public bool IsCodeValid
-	{
+    {
         get
         {
-			return ExpirationDate < DateTimeOffset.UtcNow;
+			return ExpirationDate > DateTimeOffset.UtcNow;
         }
-        set { }
-	}
-
-
-	public VerifyEmail(string userId)
-    {
-		Random random = new Random();
-		Code = random.Next(1, 1000000).ToString("00000");
-
-		ValidMinute = 10;
-
-		ExpirationDate = DateTimeOffset.UtcNow.AddMinutes(10);
-		CreatedDate = DateTimeOffset.UtcNow;
-
-		IsCodeValid = true;
-
-		UserId = userId;
     }
 }
 

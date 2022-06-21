@@ -299,6 +299,7 @@ namespace IdentityServerHost.Quickstart.UI
                 // create VerifyEmail row
                 var verifyEmailEntity = new VerifyEmail(user.Id);
                 verifyEmailRepository.InsertVerifyEmail(verifyEmailEntity);
+                verifyEmailRepository.Save();
 
 
                 // send email to user with unique code

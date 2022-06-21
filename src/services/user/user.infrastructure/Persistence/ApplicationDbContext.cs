@@ -14,6 +14,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<ApplicationUser> AspNetUsers { get; set; }
     public DbSet<IdentityUserClaim<string>> AspNetUserClaims { get; set; }
+    public DbSet<VerifyEmail> VerifyEmail { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

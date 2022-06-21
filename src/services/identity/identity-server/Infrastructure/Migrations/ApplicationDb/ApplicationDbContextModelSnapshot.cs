@@ -104,9 +104,6 @@ namespace identity_server.Infrastructure.Migrations.ApplicationDb
                     b.Property<DateTimeOffset>("ExpirationDate")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<bool>("IsCodeValid")
-                        .HasColumnType("bit");
-
                     b.Property<DateTimeOffset>("ModifiedDate")
                         .HasColumnType("datetimeoffset");
 

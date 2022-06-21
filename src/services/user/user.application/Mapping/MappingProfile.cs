@@ -14,5 +14,7 @@ public class MappingProfile : Profile
             .ForMember(d =>
                 d.UserName,
                 opt => opt.MapFrom(s => s.Email));
+
+        CreateMap<VerifyEmail, VerifyEmailDto>();
     }
 }

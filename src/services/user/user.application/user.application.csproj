@@ -28,8 +28,10 @@
 
   <ItemGroup>
     <None Remove="Features\Users\Queries\GetUsers\" />
+    <None Remove="Features\Users\Queries\GetVerifyEmailByUserId\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\Users\Queries\GetUsers\" />
+    <Folder Include="Features\Users\Queries\GetVerifyEmailByUserId\" />
   </ItemGroup>
 </Project>
