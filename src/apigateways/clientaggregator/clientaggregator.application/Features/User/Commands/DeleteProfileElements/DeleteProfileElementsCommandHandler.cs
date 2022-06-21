@@ -1,4 +1,4 @@
-﻿using clientaggregator.application.Contracts.Infrastructure.Customer;
+﻿using clientaggregator.application.Contracts.Infrastructure.User;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,9 +13,9 @@ namespace clientaggregator.application.Features.User.Commands.DeleteProfileEleme
     public class DeleteProfileElementsCommandHandler : IRequestHandler<DeleteProfileElementsCommand, Unit>
     {
         private readonly ILogger<DeleteProfileElementsCommandHandler> _logger;
-        private readonly ICustomerService _profileService;
+        private readonly IUserService _profileService;
 
-        public DeleteProfileElementsCommandHandler(ILogger<DeleteProfileElementsCommandHandler> logger, ICustomerService profileService)
+        public DeleteProfileElementsCommandHandler(ILogger<DeleteProfileElementsCommandHandler> logger, IUserService profileService)
         {
             _logger = logger;
             _profileService = profileService;

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using common.shared.User.Dto;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using user.application.Contracts.Persistence;
-using user.application.Models;
 
 namespace user.application.Features.Users.Queries.GetVerifyEmailByUserId;
 

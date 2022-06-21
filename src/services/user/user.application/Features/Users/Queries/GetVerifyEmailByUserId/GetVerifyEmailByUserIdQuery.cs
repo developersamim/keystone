@@ -1,5 +1,5 @@
-﻿using MediatR;
-using user.application.Models;
+﻿using common.shared.User.Dto;
+using MediatR;
 
 namespace user.application.Features.Users.Queries.GetVerifyEmailByUserId;
 

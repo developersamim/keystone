@@ -1,4 +1,4 @@
-﻿using clientaggregator.application.Contracts.Infrastructure.Customer;
+﻿using clientaggregator.application.Contracts.Infrastructure.User;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,9 +13,9 @@ namespace clientaggregator.application.Features.User.Commands.UpdateProfile
     public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, Unit>
     {
         private readonly ILogger<UpdateProfileCommandHandler> _logger;
-        private readonly ICustomerService _profileService;
+        private readonly IUserService _profileService;
 
-        public UpdateProfileCommandHandler(ILogger<UpdateProfileCommandHandler> logger, ICustomerService profileService)
+        public UpdateProfileCommandHandler(ILogger<UpdateProfileCommandHandler> logger, IUserService profileService)
         {
             _logger = logger;
             _profileService = profileService;

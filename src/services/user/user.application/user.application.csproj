@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\..\common\common.mediatr\common.mediatr.csproj" />
     <ProjectReference Include="..\..\..\common\common.utilities\common.utilities.csproj" />
     <ProjectReference Include="..\user.domain\user.domain.csproj" />
+    <ProjectReference Include="..\..\..\common\common.shared\common.shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

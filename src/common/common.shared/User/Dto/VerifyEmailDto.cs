@@ -1,5 +1,5 @@
 ﻿using System;
-namespace user.application.Models;
+namespace common.shared.User.Dto;
 
 public class VerifyEmailDto
 {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using common.shared.User.Dto;
 using user.application.Features.Users.Commands.CreateUser;
 using user.application.Models;
 using user.domain;

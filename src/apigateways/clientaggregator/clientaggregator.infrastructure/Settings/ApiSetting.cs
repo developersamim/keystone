@@ -8,7 +8,7 @@ namespace clientaggregator.infrastructure.Settings
 {
     public class ApiSetting
     {
-        public string CustomerApi { get; set; }        
+        public string UserApi { get; set; }        
         public string UserAgent { get; set; }
         public int HandlerLifetimeMinutes { get; set; }
     }

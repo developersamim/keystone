@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace clientaggregator.application.Contracts.Infrastructure.Customer
+namespace clientaggregator.application.Contracts.Infrastructure.User
 {
-    public interface ICustomerService
+    public interface IUserService
     {
         Task<CustomerProfileDto> GetProfile(string userId);
         Task UpdateProfile(string userId, Dictionary<string, object> userProfile);

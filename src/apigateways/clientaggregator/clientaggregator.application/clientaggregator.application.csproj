@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\common\common.mediatr\common.mediatr.csproj" />
+    <ProjectReference Include="..\..\..\common\common.shared\common.shared.csproj" />
   </ItemGroup>
 
 </Project>

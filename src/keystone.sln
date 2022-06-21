@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clientaggregator.applicatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "clientaggregator.infrastructure", "apigateways\clientaggregator\clientaggregator.infrastructure\clientaggregator.infrastructure.csproj", "{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "common.shared", "common\common.shared\common.shared.csproj", "{DF2C38F8-BAC5-477A-A965-D6216570CBE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,10 @@ Global
 		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF2C38F8-BAC5-477A-A965-D6216570CBE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF2C38F8-BAC5-477A-A965-D6216570CBE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF2C38F8-BAC5-477A-A965-D6216570CBE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF2C38F8-BAC5-477A-A965-D6216570CBE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -150,6 +156,7 @@ Global
 		{A489BCEF-F969-4129-838F-A8A420D654D6} = {A2367078-1144-42D2-B934-9D6EBA5D402A}
 		{AA03CEE1-2512-4E43-B5D5-7F9D920C1C03} = {A2367078-1144-42D2-B934-9D6EBA5D402A}
 		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1} = {A2367078-1144-42D2-B934-9D6EBA5D402A}
+		{DF2C38F8-BAC5-477A-A965-D6216570CBE1} = {BEAB4CC9-B8CF-4A98-BE4A-04C878774C72}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9963A4C-93AC-4FF6-B181-B2ECEAC236B3}

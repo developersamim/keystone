@@ -1,4 +1,4 @@
-﻿using clientaggregator.application.Contracts.Infrastructure.Customer;
+﻿using clientaggregator.application.Contracts.Infrastructure.User;
 using clientaggregator.infrastructure.Settings;
 using clientaggregator.infrastructure.User;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +10,17 @@ namespace clientaggregator.infrastructure
     {
         public static IServiceCollection AddInfrastructureSerivces(this IServiceCollection services, ApiSetting apiSettings, string clientCredentialsTokenKey)
         {
-            services.AddHttpClient<ICustomerService, UserService>(o =>
+            services.AddHttpClient<IUserService, UserService>(o =>
             {
-                o.BaseAddress = new Uri(apiSettings.CustomerApi);
+                o.BaseAddress = new Uri(apiSettings.UserApi);
+                o.DefaultRequestHeaders.Add("User-Agent", apiSettings.UserAgent);
+            })
+                .SetHandlerLifetime(TimeSpan.FromMinutes(apiSettings.HandlerLifetimeMinutes))
+                .AddClientAccessTokenHandler(clientCredentialsTokenKey);
+
+            services.AddHttpClient<IVerifyEmailService, VerifyEmailService>(o =>
+            {
+                o.BaseAddress = new Uri(apiSettings.UserApi);
                 o.DefaultRequestHeaders.Add("User-Agent", apiSettings.UserAgent);
             })
                 .SetHandlerLifetime(TimeSpan.FromMinutes(apiSettings.HandlerLifetimeMinutes))

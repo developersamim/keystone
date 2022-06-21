@@ -1,4 +1,4 @@
-﻿using clientaggregator.application.Contracts.Infrastructure.Customer;
+﻿using clientaggregator.application.Contracts.Infrastructure.User;
 using clientaggregator.application.Contracts.Models.Profile;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -14,9 +14,9 @@ namespace clientaggregator.application.Features.User.Queries.GetUsers
     public class GetProfileQueryHandler : IRequestHandler<GetUsersQuery, IEnumerable<CustomerProfileDto>>
     {
         private readonly ILogger<GetProfileQueryHandler> _logger;
-        private readonly ICustomerService _customerService;
+        private readonly IUserService _customerService;
 
-        public GetProfileQueryHandler(ILogger<GetProfileQueryHandler> logger, ICustomerService customerService)
+        public GetProfileQueryHandler(ILogger<GetProfileQueryHandler> logger, IUserService customerService)
         {
             _logger = logger;
             _customerService = customerService;
