@@ -19,6 +19,7 @@
         <PackageReference Include="Blazored.LocalStorage" Version="4.2.0" />
 		<PackageReference Include="MudBlazor" Version="6.0.9" />
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
 	</ItemGroup>
 	
 	
@@ -26,9 +27,18 @@
 	  <None Remove="Infrastructure\" />
 	  <None Remove="Infrastructure\Contracts\" />
 	  <None Remove="Microsoft.AspNetCore.WebUtilities" />
+	  <None Remove="Microsoft.AspNetCore.Http" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Infrastructure\" />
 	  <Folder Include="Infrastructure\Contracts\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\common\common.shared\common.shared.csproj">
+	    <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+	  </ProjectReference>
+	  <ProjectReference Include="..\..\common\common.exception\common.exception.csproj">
+	    <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+	  </ProjectReference>
 	</ItemGroup>
 </Project>

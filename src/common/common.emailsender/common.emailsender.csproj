@@ -7,14 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="user\" />
-    <None Remove="User\Dto\" />
+    <None Remove="NETCore.MailKit" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="User\" />
-    <Folder Include="User\Dto\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\common.exception\common.exception.csproj" />
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
   </ItemGroup>
 </Project>

@@ -34,6 +34,7 @@ public class ExceptionMiddleware
     {
         ApiError response;
         int statusCode = StatusCodes.Status500InternalServerError;
+        //int statusCode = context.Response.StatusCode;
         string message;
         var exceptionType = ex.GetType();
 

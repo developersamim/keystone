@@ -13,6 +13,7 @@ public static class Constant
         public const string FamilyName = "family_name";
         public const string UserName = "username";
         public const string Deposit = "deposit";
+        public const string EmailVerified = "email_verified";
     }
 }
 

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using user.application.Features.Users.Commands.SendEmailVerifyCode;
 using user.application.Features.Users.Queries.GetVerifyEmailByUserId;
 
 namespace user.api.Controllers;
@@ -27,5 +28,17 @@ public class VerifyEmailController : ControllerBase
         var result = await mediator.Send(query);
 
         return Ok(result);  
+    }
+
+    [HttpPost("{userId}/[action]")]
+    public async Task<ActionResult> SendVerifyEmailCode([FromRoute] string userId)
+    {
+        var command = new SendEmailVerifyCodeCommand
+        {
+            UserId = userId
+        };
+        await mediator.Send(command);
+
+        return NoContent();
     }
 }

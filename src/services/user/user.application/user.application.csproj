@@ -13,6 +13,7 @@
     <ProjectReference Include="..\..\..\common\common.utilities\common.utilities.csproj" />
     <ProjectReference Include="..\user.domain\user.domain.csproj" />
     <ProjectReference Include="..\..\..\common\common.shared\common.shared.csproj" />
+    <ProjectReference Include="..\..\..\common\common.emailsender\common.emailsender.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,9 +31,11 @@
   <ItemGroup>
     <None Remove="Features\Users\Queries\GetUsers\" />
     <None Remove="Features\Users\Queries\GetVerifyEmailByUserId\" />
+    <None Remove="Features\Users\Commands\SendEmailVerifyCode\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\Users\Queries\GetUsers\" />
     <Folder Include="Features\Users\Queries\GetVerifyEmailByUserId\" />
+    <Folder Include="Features\Users\Commands\SendEmailVerifyCode\" />
   </ItemGroup>
 </Project>

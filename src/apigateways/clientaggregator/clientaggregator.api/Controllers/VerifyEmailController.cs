@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using clientaggregator.application.Contracts.Infrastructure.User;
+using clientaggregator.application.Features.User.Commands.CheckVerifyEmailByUserId;
 using common.api.authentication;
+using common.shared;
+using common.utilities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,18 +18,34 @@ namespace clientaggregator.api.Controllers;
 public class VerifyEmailController : ControllerBase
 {
     private readonly ILogger<UserController> logger;
+    private readonly IMediator mediator;
     private readonly IVerifyEmailService verifyEmailService;
 
-    public VerifyEmailController(ILogger<UserController> logger, IVerifyEmailService verifyEmailService)
+    public VerifyEmailController(ILogger<UserController> logger, IMediator mediator, IVerifyEmailService verifyEmailService)
     {
         this.logger = logger;
+        this.mediator = mediator;
         this.verifyEmailService = verifyEmailService;
     }
 
-    [HttpGet("{userId}")]
-    public async Task<ActionResult> GetVerifyEmail([FromRoute] string userId)
+    [HttpPost]
+    public async Task<ActionResult> CheckVerifyEmailCode([FromBody] CheckVerifyEmailCodeRequestDto request)
     {
-        var result = await verifyEmailService.GetVerifyEmail(Guid.Parse(userId));
-        return Ok(result);  
+        var command = new CheckVerifyEmailByUserIdCommand
+        {
+            UserId = User.UserId(),
+            Code = request.Code
+        };
+        var result = await mediator.Send(command);
+
+        return Ok(result);
+    }
+
+    [HttpPost("[action]")]
+    public async Task<ActionResult> SendVerifyEmailCode()
+    {
+        await verifyEmailService.SendVerifyEmailCode(User.UserId());
+
+        return NoContent();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using common.api.authentication;
 using common.api.swagger;
+using common.emailsender;
 using common.exception;
 using IdentityModel;
 using IdentityServer4.AccessTokenValidation;
@@ -17,6 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+EmailSetting emailSetting = builder.Configuration.GetSection("EmailSetting").Get<EmailSetting>();
+builder.Services.AddSingleton(emailSetting);
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);

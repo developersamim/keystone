@@ -16,6 +16,9 @@
     <ProjectReference Include="..\..\..\common\common.api.swagger\common.api.swagger.csproj" />
     <ProjectReference Include="..\user.application\user.application.csproj" />
     <ProjectReference Include="..\user.infrastructure\user.infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\common\common.emailsender\common.emailsender.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

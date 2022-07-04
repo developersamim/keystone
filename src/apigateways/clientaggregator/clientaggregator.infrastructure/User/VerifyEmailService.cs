@@ -19,11 +19,16 @@ namespace clientaggregator.infrastructure.User
         {
         }
 
-        public async Task<VerifyEmailDto> GetVerifyEmail(Guid userId)
+        public async Task<VerifyEmailDto> GetVerifyEmail(string userId)
         {
             var response = await Client.GetFromJsonAsync<VerifyEmailDto>($"{ControllerUrl}/{userId}");
 
             return response;
+        }
+
+        public async Task SendVerifyEmailCode(string userId)
+        {
+            await Client.PostAsync($"{ControllerUrl}/{userId}/sendverifyemailcode", null);
         }
     }
 }

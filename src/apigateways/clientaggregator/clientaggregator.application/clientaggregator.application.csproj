@@ -18,6 +18,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\common\common.mediatr\common.mediatr.csproj" />
     <ProjectReference Include="..\..\..\common\common.shared\common.shared.csproj" />
+    <ProjectReference Include="..\..\..\common\common.utilities\common.utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Features\User\Commands\CheckVerifyEmail\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\User\Commands\CheckVerifyEmailByUserId\" />
+  </ItemGroup>
 </Project>

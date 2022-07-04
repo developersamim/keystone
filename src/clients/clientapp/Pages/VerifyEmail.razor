@@ -4,6 +4,7 @@
 
 @using FluentValidation
 @using clientapp.Infrastructure.Contracts
+@using common.shared
 
 
 @inject NavigationManager Navigation
@@ -13,6 +14,7 @@
 
 <MudGrid Justify="Justify.Center" Style="padding-top: 40px">
     <MudItem xs="12" sm="4">
+        
         <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">Check your email</MudText>
 
         <MudForm Model="@verifyEmailModel" @ref="@form" Validation="@(verifyEmailValidator.ValidateValue)" ValidationDelay="0">
@@ -24,12 +26,36 @@
         </MudForm>
 
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" disabled="@(!form.IsTouched || !form.IsValid)" OnClick="@(async () => await Submit())">Verify</MudButton>
-
+            <MudButton Disabled="@(processing || !form.IsTouched || !form.IsValid)" OnClick="@(async () => await Submit())" Variant="Variant.Filled" Color="Color.Primary" EndIcon="@Icons.Material.Filled.Send" FullWidth="true">
+                @if (processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Verify</MudText>
+                }
+            </MudButton>
         </MudCardActions>
-        <div style="text-align: center; margin-top: 30px">
-            <MudLink Href="/" Align="center">Back to Home</MudLink>
+
+        <div style="padding: 0 8px;">
+            <MudButton Variant="Variant.Outlined" FullWidth="true" OnClick="@(async () => await SendVerifyEmailCode())">
+                @if (processingSendVerifyEmailCode)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Resend Code</MudText>
+                }
+            </MudButton>
         </div>
+
+        <MudStack Style="margin-top: 30px">
+            <MudLink Href="/" Align="center">Back to Home</MudLink>
+        </MudStack>
 
     </MudItem>
 </MudGrid>
@@ -40,13 +66,16 @@
 
 
 @code {
-    [CascadingParameter] protected Task<AuthenticationState> AuthenticationStateTask { get; set; }
-    [Inject] ISnackbar Snackbar { get; set; }
+    [CascadingParameter] protected Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+    [Inject] ISnackbar? Snackbar { get; set; }
+    [Inject] IVerifyEmailService? verifyEmailService { get; set; }
     private VerifyEmailModel verifyEmailModel { get; set; } = new VerifyEmailModel();
     private VerifyEmailModelFluentValidator verifyEmailValidator = new VerifyEmailModelFluentValidator();
-    private string emailAddress { get; set; }
+    private string? emailAddress { get; set; }
+    private bool processing = false;
+    private bool processingSendVerifyEmailCode = false;
 
-    MudForm form;
+    MudForm? form;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -55,19 +84,46 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var isVerified = claims.FirstOrDefault(x => x.Type == "email_verified").Value;
-            emailAddress = claims.FirstOrDefault(x => x.Type == "email").Value;
+            var isVerified = claims.FirstOrDefault(x => x.Type == "email_verified")?.Value;
+            emailAddress = claims.FirstOrDefault(x => x.Type == "email")?.Value;
         }
     }
 
     public class VerifyEmailModel
     {
-        public string Code { get; set; }
+        public string? Code { get; set; }
     }
 
     private async Task Submit()
     {
+        await form.Validate();
+        processing = !processing;
 
+        var request = new CheckVerifyEmailCodeRequestDto { Code = verifyEmailModel.Code };
+        var data = await verifyEmailService.CheckVerifyEmailCode(request);
+
+        if(data.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            Snackbar.Add("Your email address has been verified!", MudBlazor.Severity.Success);
+        }
+
+        //showLoader = !showLoader;
+        processing = !processing;
+    }
+
+    public async Task SendVerifyEmailCode()
+    {
+        processingSendVerifyEmailCode = !processingSendVerifyEmailCode;
+
+        var result = await verifyEmailService.SendVerifyEmailCode();
+        if(result.StatusCode == System.Net.HttpStatusCode.NoContent || result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            Snackbar.Add("Please check your email and retrieve code for verification", MudBlazor.Severity.Info);
+        }
+
+        processingSendVerifyEmailCode = !processingSendVerifyEmailCode;
+
+        form.Reset();
     }
 
     /// <summary>
@@ -80,7 +136,7 @@
         {
             RuleFor(x => x.Code)
                 .NotEmpty()
-                .Length(1, 5);
+                .Length(6, 6);
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>

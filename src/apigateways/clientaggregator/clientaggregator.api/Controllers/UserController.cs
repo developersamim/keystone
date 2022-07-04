@@ -73,7 +73,6 @@ namespace clientaggregator.api.Controllers
                 [Constant.KnownUserClaim.GivenName] = request.GivenName,
                 [Constant.KnownUserClaim.FamilyName] = request.FamilyName,
                 [Constant.KnownUserClaim.Birthdate] = request.Birthdate.Date.ToString("yyyy-MM-dd"),
-                [Constant.KnownUserClaim.ProfileVerified] = true
             };
 
             var query = new UpdateProfileCommand()

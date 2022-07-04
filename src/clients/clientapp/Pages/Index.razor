@@ -22,14 +22,20 @@
 
 @code {
 
-    [CascadingParameter] protected Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        [CascadingParameter] protected Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
         var user = (await AuthenticationStateTask).User;
+        var claims = user.Claims;
         if (user.Identity.IsAuthenticated)
         {
-            NavManager.NavigateTo("/verifyemail");
+            if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out bool verifiedEmailClaim))
+                verifiedEmailClaim = false;
+            if(!verifiedEmailClaim)
+                NavManager.NavigateTo("/verifyemail");
+
+            NavManager.NavigateTo("updateprofile");
         }
     }
     private async Task BeginRegistration(MouseEventArgs args)

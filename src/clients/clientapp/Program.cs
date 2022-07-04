@@ -24,8 +24,13 @@ builder.Services.AddTransient<CustomAuthorizationMessageHandler>();
 builder.Services.AddHttpClient<IUserService, UserService>
     (client =>
     {
-        client.BaseAddress = new Uri("http://localhost:9000");
+        client.BaseAddress = new Uri("http://localhost:8000");
     })
+    .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
+builder.Services.AddHttpClient<IVerifyEmailService, VerifyEmailService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:8000");
+})
     .AddHttpMessageHandler<CustomAuthorizationMessageHandler>();
 
 builder.Services.AddScoped(
