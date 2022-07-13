@@ -24,5 +24,21 @@ public class BaseService
             snackbar.Add($"{apiError.Message}", MudBlazor.Severity.Error);
         }
     }
+
+    public async Task<TM> ValidateResponse<TM>(HttpResponseMessage httpResponseMessage)
+    {
+        if (!httpResponseMessage.IsSuccessStatusCode)
+        {
+            var apiError = await httpResponseMessage.Content.ReadFromJsonAsync<ApiError>();
+
+            snackbar.Add($"{apiError.Message}", MudBlazor.Severity.Error);
+
+            return default(TM);
+        }
+
+        var response = await httpResponseMessage.Content.ReadFromJsonAsync<TM>();
+
+        return response;
+    }
 }
 

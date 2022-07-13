@@ -19,4 +19,6 @@ public class UserProfile
     public string GivenName { get; set; }
     [JsonPropertyName("familyName")]
     public string FamilyName { get; set; }
+    [JsonPropertyName("emailVerified")]
+    public bool EmailVerified { get; set; }
 }

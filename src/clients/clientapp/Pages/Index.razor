@@ -1,9 +1,5 @@
 ﻿@page "/"
-@using clientapp.Infrastructure.Contracts
-@inject NavigationManager NavManager
-
-
-@inject NavigationManager Navigation
+@attribute [AllowAnonymous]
 @inject NavigationManager NavigationManager
 
 <PageTitle>KS</PageTitle>
@@ -21,26 +17,9 @@
 
 
 @code {
-
-        [CascadingParameter] protected Task<AuthenticationState> AuthenticationStateTask { get; set; }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        var user = (await AuthenticationStateTask).User;
-        var claims = user.Claims;
-        if (user.Identity.IsAuthenticated)
-        {
-            if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out bool verifiedEmailClaim))
-                verifiedEmailClaim = false;
-            if(!verifiedEmailClaim)
-                NavManager.NavigateTo("/verifyemail");
-
-            NavManager.NavigateTo("updateprofile");
-        }
-    }
     private async Task BeginRegistration(MouseEventArgs args)
     {
-        Navigation.NavigateTo("authentication/login");
+        NavigationManager.NavigateTo("authentication/login");
         //Navigation.NavigateTo("https://localhost:7001/account/login?returnUrl=https://localhost:4001");
 
         //var returnUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -51,5 +30,39 @@
              //returnUrl = Uri.EscapeDataString(returnUrl);
              NavigationManager.NavigateTo($"https://localhost:7001/account/register?returnUrl={returnUrl}",
             forceLoad: true);*@
+    }
+
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+    [Inject] IUserService userService { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        var claims = user.Claims;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            UserProfileDto userProfile = await userService.GetProfile();
+            Console.WriteLine($"userProfile: {JsonSerializer.Serialize(userProfile)}");
+            var a = claims.FirstOrDefault(x => x.Type == "email_verified").Value;
+            Console.WriteLine($"a: {a}");
+            if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out bool verifiedEmailClaim))
+                verifiedEmailClaim = false;
+            Console.WriteLine($"Verified email claim: {verifiedEmailClaim}");
+
+
+            Console.WriteLine($"Profile Verified email property: {userProfile.EmailVerified}");
+
+            if (userProfile.EmailVerified)
+                NavigationManager.NavigateTo("/landing");
+            if (!userProfile.EmailVerified)
+                NavigationManager.NavigateTo("/verifyemail");
+            Console.WriteLine("3");
+            //NavManager.NavigateTo("updateprofile");
+        }
+        else
+        {
+            Console.WriteLine("4");
+        }
     }
 }

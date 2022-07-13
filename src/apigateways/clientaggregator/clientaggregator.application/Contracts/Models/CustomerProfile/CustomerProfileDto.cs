@@ -8,4 +8,5 @@ public class CustomerProfileDto
     public string FamilyName { get; set; }
     public string Picture { get; set; }
     public string Id { get; set; }
+    public bool EmailVerified { get; set; }
 }

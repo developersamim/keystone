@@ -13,10 +13,19 @@ public class EmailMessage
     public EmailMessage(Dictionary<string, string> to, string code)
     {
         To = new List<MailboxAddress>();
-
         To.AddRange(to.Select(x => new MailboxAddress(x.Key, x.Value)));
+
         Subject = "Code for KeyStone";
         //Content = content;
         Code = code;
+    }
+
+    public EmailMessage(Dictionary<string, string> to, string subject, string content)
+    {
+        To = new List<MailboxAddress>();
+        To.AddRange(to.Select(x => new MailboxAddress(x.Key, x.Value)));
+
+        Subject = subject;
+        Content = content;
     }
 }

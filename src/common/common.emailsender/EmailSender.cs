@@ -12,6 +12,11 @@ public class EmailSender : IEmailSender
     {
         this.emailSetting = emailSetting;
     }
+    public void SendCodeToVerifyEmail(EmailMessage message)
+    {
+        var emailMessage = CreateSendCodeToVerifyEmailMessage(message);
+        Send(emailMessage);
+    }
     public void SendEmail(EmailMessage message)
     {
         var emailMessage = CreateEmailMessage(message);
@@ -19,6 +24,28 @@ public class EmailSender : IEmailSender
     }
 
     private MimeMessage CreateEmailMessage(EmailMessage message)
+    {
+        var bodyBuilder = new BodyBuilder();
+        bodyBuilder.HtmlBody = "<div style=\"padding-left:100px;\">";
+        bodyBuilder.HtmlBody += "<div style=\"border-style:ridge;padding:15px 30px;\">";
+        bodyBuilder.HtmlBody += "<h1 style=\"margin-bottom:30px;\">Your password reset link for KeyStone</h1>";
+        bodyBuilder.HtmlBody += "<p style=\"margin-bottom:15px;\">Use this link to reset your password<p>\n";
+        bodyBuilder.HtmlBody += "<span style=\"background-color:powderblue;padding:5px 10px;\">" + message.Content + "</span>";
+        bodyBuilder.HtmlBody += "<hr style=\"margin-bottom:15px;margin-top:40px;\">";
+        bodyBuilder.HtmlBody += "<p style=\"color:gray;\">KeyStone</p>";
+        bodyBuilder.HtmlBody += "</div>";
+        bodyBuilder.HtmlBody += "</div>";
+
+        var emailMessage = new MimeMessage();
+        //emailMessage.From.Add(new MailboxAddress(emailSetting.From));
+        emailMessage.From.Add(new MailboxAddress("KeyStone", emailSetting.From));
+        emailMessage.To.AddRange(message.To);
+        emailMessage.Subject = message.Subject;
+        emailMessage.Body = bodyBuilder.ToMessageBody();
+        return emailMessage;
+    }
+
+    private MimeMessage CreateSendCodeToVerifyEmailMessage(EmailMessage message)
     {
         var bodyBuilder = new BodyBuilder();
         bodyBuilder.HtmlBody = "<div style=\"padding-left:100px;\">";

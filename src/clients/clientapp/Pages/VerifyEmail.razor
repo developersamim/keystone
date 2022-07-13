@@ -1,13 +1,10 @@
 ﻿@page "/verifyemail"
 @layout EmptyLayout
-@attribute [Authorize]
 
 @using FluentValidation
 @using clientapp.Infrastructure.Contracts
 @using common.shared
 
-
-@inject NavigationManager Navigation
 @inject NavigationManager NavigationManager
 
 <PageTitle>KS</PageTitle>
@@ -85,6 +82,11 @@
         if (user.Identity.IsAuthenticated)
         {
             var isVerified = claims.FirstOrDefault(x => x.Type == "email_verified")?.Value;
+            if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out bool verifiedEmailClaim))
+                verifiedEmailClaim = false;
+            if (verifiedEmailClaim)
+                NavigationManager.NavigateTo("/");
+
             emailAddress = claims.FirstOrDefault(x => x.Type == "email")?.Value;
         }
     }

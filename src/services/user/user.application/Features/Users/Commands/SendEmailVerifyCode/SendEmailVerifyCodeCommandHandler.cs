@@ -48,7 +48,7 @@ public class SendEmailVerifyCodeCommandHandler : IRequestHandler<SendEmailVerify
                     { userclaims.FirstOrDefault(x => x.Type == "given_name").Value, user.Email }
                 };
         var message = new EmailMessage(usersToBeEmailed, verifyEmailEntity.Code);
-        emailSender.SendEmail(message);
+        emailSender.SendCodeToVerifyEmail(message);
 
         return Unit.Value;
     }

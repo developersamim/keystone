@@ -1,10 +1,9 @@
+using common.emailsender;
 using identity_server.Extension;
 using identity_server.IdentityServerConfig;
 using identity_server.Infrastructure;
 using identity_server.Infrastructure.Repositories;
 using identity_server.Models;
-using identity_server.Services;
-using identity_server.Settings;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using IdentityServer4.Validation;
@@ -41,6 +40,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(e =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+   opt.TokenLifespan = TimeSpan.FromHours(2));
+
 builder.Services.AddIdentityServer()
     .AddAspNetIdentity<ApplicationUser>()
     .AddConfigurationStore(options =>
@@ -57,13 +59,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(Program));
 
 // add CORS policy
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
-    options.DefaultPolicyName = "api";
-    options.AddPolicy("api", policy =>
-    {
-        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-    });
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            //policy.WithOrigins("https://localhost:7187");
+            policy.AllowAnyOrigin();
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+        });
 });
 
 if (builder.Environment.IsDevelopment())
@@ -78,21 +84,28 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseCors(x => x
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .SetIsOriginAllowed(origin => true) // allow any origin
-                   .WithOrigins(
-                        "http://localhost",
-                        "http://localhost:8000",
-                        "http://localhost:8100",
-                        "http://localhost:8200"));
+    //app.UseCors(x => x
+    //               .AllowAnyMethod()
+    //               .AllowAnyHeader()
+    //               .SetIsOriginAllowed(origin => true) // allow any origin
+    //               .WithOrigins(
+    //                    "http://localhost",
+    //                    "http://localhost:8000",
+    //                    "http://localhost:8100",
+    //                    "http://localhost:8200"));
+
+    //app.UseCors(x => x
+    //               .AllowAnyMethod()
+    //               .AllowAnyHeader()
+    //               .AllowAnyOrigin());
 }
 
 app.InitializeDatabase(app.Environment.IsDevelopment(), app.Services);
 
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 

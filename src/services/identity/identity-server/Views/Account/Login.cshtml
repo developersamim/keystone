@@ -44,7 +44,7 @@
                 }*@
                             <button class="btn btn-primary btn-block" name="button" value="login" style="background-color: #594ae2">Login</button>
                             <div style="text-align: center; margin-top: 15px;">
-                                <a href="#" style="color: #594ae2; text-decoration: underline">Forgot Your Password?</a>
+                                <a style="color: #594ae2; text-decoration: underline" asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">Forgot Your Password?</a>
                             </div>
                             
                             @*<button class="btn btn-secondary" name="button" value="cancel">Cancel</button>*@

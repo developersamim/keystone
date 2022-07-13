@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <MudThemeProvider />
 <MudDialogProvider />
@@ -16,3 +17,39 @@
         @Body
     </MudMainContent>
 </MudLayout>
+
+@code {
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+    [Inject] IUserService userService { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        var claims = user.Claims;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            UserProfileDto userProfile = await userService.GetProfile();
+            Console.WriteLine($"userProfile: {JsonSerializer.Serialize(userProfile)}");
+            var a = claims.FirstOrDefault(x => x.Type == "email_verified").Value;
+            Console.WriteLine($"a: {a}");
+            if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out bool verifiedEmailClaim))
+                verifiedEmailClaim = false;
+            Console.WriteLine($"Verified email claim: {verifiedEmailClaim}");
+
+
+            Console.WriteLine($"Profile Verified email property: {userProfile.EmailVerified}");
+
+            if (userProfile.EmailVerified)
+                NavigationManager.NavigateTo("/landing");
+            if (!userProfile.EmailVerified)
+                NavigationManager.NavigateTo("/verifyemail");
+            Console.WriteLine("3");
+            //NavManager.NavigateTo("updateprofile");
+        }
+        else
+        {
+            Console.WriteLine("4");
+        }
+    }
+}
