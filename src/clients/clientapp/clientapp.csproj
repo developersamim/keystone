@@ -32,6 +32,8 @@
 	<ItemGroup>
 	  <Folder Include="Infrastructure\" />
 	  <Folder Include="Infrastructure\Contracts\" />
+	  <Folder Include="wwwroot\assets\" />
+	  <Folder Include="wwwroot\assets\css\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\common\common.shared\common.shared.csproj">
@@ -40,5 +42,9 @@
 	  <ProjectReference Include="..\..\common\common.exception\common.exception.csproj">
 	    <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
 	  </ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Remove="wwwroot\assets\" />
+	  <Content Remove="wwwroot\assets\css\" />
 	</ItemGroup>
 </Project>
