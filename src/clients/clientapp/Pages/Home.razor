@@ -1,0 +1,19 @@
+﻿@page "/home"
+@inject NavigationManager NavigationManager
+
+<PageTitle>KS</PageTitle>
+
+<MudContainer Class="mt-16" MaxWidth="MaxWidth.Medium">
+    <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Welcome after login</MudText>
+</MudContainer>
+
+
+
+
+@code {
+
+    private async Task BeginRegistration(MouseEventArgs args)
+    {
+        NavigationManager.NavigateTo("authentication/login");
+    }
+}

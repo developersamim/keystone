@@ -44,8 +44,7 @@
 </MudLayout>
 
 @code {
-    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
-    [Inject] IUserService userService { get; set; }
+    [CascadingParameter] protected Task<AuthenticationState> AuthState { get; set; }
     bool _drawerOpen = true;
 
     void DrawerToggle()
@@ -59,36 +58,35 @@
         NavigationManager.NavigateTo("authentication/logout");
     }
 
-    protected async override Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        base.OnInitialized();
-        var user = (await AuthStat).User;
+        var user = (await AuthState).User;
         var claims = user.Claims;
 
         if (user.Identity.IsAuthenticated)
         {
-            UserProfileDto userProfile = await userService.GetProfile();
-            Console.WriteLine($"userProfile: {JsonSerializer.Serialize(userProfile)}");
-            var a = claims.FirstOrDefault(x => x.Type == "email_verified").Value;
-            Console.WriteLine($"a: {a}");
-            if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out bool verifiedEmailClaim))
-                verifiedEmailClaim = false;
+            var verifiedEmailClaim = false;
+            var verifiedEmailClaimProperty = claims.FirstOrDefault(x => x.Type == "email_verified").Value;
+
+            if (verifiedEmailClaimProperty.StartsWith("["))
+            {
+                var value1 = verifiedEmailClaimProperty.Split(",")[0].Remove(0, 2);
+                var value = value1.Remove(value1.Length - 1, 1);
+                Console.WriteLine($"value: {value}");
+                if (!bool.TryParse(value, out verifiedEmailClaim))
+                    verifiedEmailClaim = false;
+            }
+            else
+            {
+                if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out verifiedEmailClaim))
+                    verifiedEmailClaim = false;
+            }
+
+
             Console.WriteLine($"Verified email claim: {verifiedEmailClaim}");
-            @*if (!verifiedEmailClaim)
-                NavManager.NavigateTo("/verifyemail");*@
 
-            Console.WriteLine($"Profile Verified email property: {userProfile.EmailVerified}");
-
-            if (userProfile.EmailVerified)
-                NavigationManager.NavigateTo("/landing");
-            if (!userProfile.EmailVerified)
+            if (!verifiedEmailClaim)
                 NavigationManager.NavigateTo("/verifyemail");
-            Console.WriteLine("1");
-            //NavManager.NavigateTo("updateprofile");
-        }
-        else
-        {
-            Console.WriteLine("2");
         }
     }
 }

@@ -81,11 +81,11 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var isVerified = claims.FirstOrDefault(x => x.Type == "email_verified")?.Value;
+            @*var isVerified = claims.FirstOrDefault(x => x.Type == "email_verified")?.Value;
             if (!bool.TryParse(claims.FirstOrDefault(x => x.Type == "email_verified").Value, out bool verifiedEmailClaim))
                 verifiedEmailClaim = false;
             if (verifiedEmailClaim)
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/");*@
 
             emailAddress = claims.FirstOrDefault(x => x.Type == "email")?.Value;
         }

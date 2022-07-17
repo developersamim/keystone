@@ -43,7 +43,7 @@ builder.Services.AddOidcAuthentication(options =>
     builder.Configuration.Bind("oidc", options.ProviderOptions);
     options.AuthenticationPaths.RemoteRegisterPath = "Account/Register";
     //options.ProviderOptions.AdditionalProviderParameters.Add("bypass", "true");
-    options.ProviderOptions.RedirectUri = "https://localhost:4001/verifyemail";
+    options.ProviderOptions.RedirectUri = "https://localhost:4001/home";
 });
 
 builder.Services.AddMudServices(config =>
