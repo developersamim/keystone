@@ -412,14 +412,15 @@ namespace IdentityServerHost.Quickstart.UI
                 return View();
             }
 
-            return RedirectToAction("Login", "Account", new { ReturnUrl = resetPasswordModel.ReturnUrl  });
+            return RedirectToAction("ResetPasswordConfirmation", "Account", new { ReturnUrl = resetPasswordModel.ReturnUrl  });
 
-            //return RedirectToAction(nameof(ResetPasswordConfirmation));
+            //return RedirectToAction(ResetPasswordConfirmation));
         }
 
         [HttpGet]
-        public IActionResult ResetPasswordConfirmation()
+        public IActionResult ResetPasswordConfirmation(string returnUrl)
         {
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
