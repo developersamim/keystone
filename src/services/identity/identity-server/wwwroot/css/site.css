@@ -28,3 +28,45 @@
 .customnav {
     background-color: #594ae2 !important;
 }
+.custom-color {
+    color: #594ae2;
+}
+
+/* login starts here */
+.custom-center {
+    text-align: center;
+}
+.custom-navbar-brand {
+    color: #fff !important;
+}
+.custom-forgot {
+    color: #594ae2;
+    text-decoration: underline;
+}
+.custom-forgot-wrapper {
+    text-align: center;
+    margin-top: 15px;
+}
+.custom-card {
+    border: none !important;
+    background-clip: unset !important;
+}
+.custom-button {
+    background-color: #594ae2;
+}
+.custom-signup {
+    margin-top: 20px;
+    color: #594ae2;
+}
+/* login ends here */
+
+/* signup starts here */
+.custom-signup-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.custom-signup-button {
+    margin-top: 20px;
+    background-color: #594ae2;
+}
+/* signup ends here */

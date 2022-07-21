@@ -13,10 +13,10 @@
         @if (Model.EnableLocalLogin)
         {
             <div class="col-sm-6">
-                <div class="card" style="border: none !important; background-clip: unset !important">
-                    <div class="" style="padding-left: 20px !important; text-align: center">
+                <div class="card custom-card">
+                    <div class="custom-center">
                         <h2>Login to Your Account</h2>
-                        Don't have an account? <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" style="margin-top: 20px; color: #594ae2">Sign Up</a>
+                        Don't have an account? <a class="custom-signup" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Sign Up</a>
                     </div>
                     
                     <div class="card-body">
@@ -42,9 +42,9 @@
                         </div>
                     </div>
                 }*@
-                            <button class="btn btn-primary btn-block" name="button" value="login" style="background-color: #594ae2">Login</button>
-                            <div style="text-align: center; margin-top: 15px;">
-                                <a style="color: #594ae2; text-decoration: underline" asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">Forgot Your Password?</a>
+                            <button class="btn btn-primary btn-block custom-button" name="button" value="login">Login</button>
+                            <div class="custom-forgot-wrapper">
+                                <a class="custom-forgot" asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">Forgot Your Password?</a>
                             </div>
                             
                             @*<button class="btn btn-secondary" name="button" value="cancel">Cancel</button>*@

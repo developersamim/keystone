@@ -29,7 +29,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
 
-                        <div style="margin-bottom: 30px; text-align: center">
+                        <div class="custom-signup-header">
                             <h2>Sign up a new account</h2>
                         </div>
 
@@ -53,12 +53,12 @@
                                     <input type="password" class="form-control input-bottom" placeholder="Confirm password" asp-for="ConfirmPassword" autocomplete="off">
                                 </div>
                                 <div class="form-group">
-                                    <small>Please read our <a href="">terms and conditions</a> and <a href="">privacy policy</a>.</small>
+                                    <small>Please read our <a class="custom-color" href="">terms and conditions</a> and <a class="custom-color" href="">privacy policy</a>.</small>
                                 </div>
-                                <button class="btn btn-primary btn-block" name="button" value="register" style="background-color: #594ae2">Register</button>
+                                <button class="btn btn-primary btn-block custom-signup-button" name="button" value="register">Register</button>
 
-                                <div style="text-align: center; margin-top: 15px">
-                                    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" style="margin-top: 20px; color: #594ae2">Back to Login</a>
+                                <div class="custom-forgot-wrapper">
+                                    <a class="custom-color" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Back to Login</a>
                                 </div>
 
                             </fieldset>

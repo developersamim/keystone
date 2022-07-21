@@ -5,6 +5,6 @@ namespace clientapp.Infrastructure.Contracts;
 public interface IUserService
 {
     Task<List<UserProfileDto>> GetUsers();
-    Task UpdateProfile(UserUpdateProfileDto request);
+    Task<HttpResponseMessage> UpdateProfile(UserUpdateProfileDto request);
     Task<UserProfileDto> GetProfile();
 }

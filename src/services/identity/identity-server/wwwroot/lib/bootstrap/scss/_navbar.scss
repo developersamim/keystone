@@ -222,11 +222,12 @@
 // Dark links against a light background
 .navbar-light {
   .navbar-brand {
-    color: $navbar-light-brand-color;
+    //color: $navbar-light-brand-color;
+    color: #fff;
 
-    @include hover-focus() {
-      color: $navbar-light-brand-hover-color;
-    }
+    //@include hover-focus() {
+    //  color: $navbar-light-brand-hover-color;
+    //}
   }
 
   .navbar-nav {

@@ -25,10 +25,13 @@ public class UserService : BaseService, IUserService
 		return await response.Content.ReadFromJsonAsync<List<UserProfileDto>>();
     }
 
-	public async Task UpdateProfile(UserUpdateProfileDto request)
+	public async Task<HttpResponseMessage> UpdateProfile(UserUpdateProfileDto request)
     {
-		await httpClient.PutAsJsonAsync($"{ControllerUrl}", request);
-    }
+		var response = await httpClient.PutAsJsonAsync($"{ControllerUrl}", request);
+		ValidateResponse(response);
+
+		return response;
+	}
 
     public async Task<UserProfileDto> GetProfile()
     {

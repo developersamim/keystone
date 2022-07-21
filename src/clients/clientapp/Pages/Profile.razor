@@ -22,12 +22,34 @@
                 <MudTextField @bind-Value="profileModel.Email" Immediate="true" Label="Email Address" For="@(() => profileModel.Email)" Disabled="true" />
                 <MudTextField @bind-Value="profileModel.FirstName" Immediate="true" Label="First Name" For="@(() => profileModel.FirstName)" />
                 <MudTextField @bind-Value="profileModel.LastName" Immediate="true" Label="Last Name" For="@(() => profileModel.LastName)" />
-                <MudDatePicker Label="Date of Birth" @bind-Date="profileModel.DateOfBirth" MinDate="DateTime.Now.AddYears(-100)" MaxDate="DateTime.Now" For="@(() => profileModel.DateOfBirth)" />
+                <MudDatePicker
+                               Label="Date of Birth"
+                               @bind-Date="profileModel.DateOfBirth"
+                               MinDate="DateTime.Now.AddYears(-100)"
+                               MaxDate="DateTime.Now"
+                               For="@(() => profileModel.DateOfBirth)"
+                               DisableToolbar="true"
+                               />
             </MudCardContent>
         </MudForm>
 
         <MudCardActions>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" disabled="@(!form.IsTouched)" OnClick="@(async () => await Submit())">Save</MudButton>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       FullWidth="true"
+                       Disabled="@(processing || !form.IsTouched || !form.IsValid)"
+                       OnClick="@(async () => await Submit())">
+                @if (processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Save" Style="margin-right: 3px"/>
+                    <MudText> Save</MudText>
+                }
+            </MudButton>
         </MudCardActions>
 
     </MudItem>
@@ -37,6 +59,7 @@
     [CascadingParameter] private Task<AuthenticationState> authenticationStateTask { get; set; }
     private ProfileModel profileModel { get; set; } = new ProfileModel();
     MudForm form;
+    private bool processing = false;
     bool success;
     [Inject] ISnackbar Snackbar { get; set; }
 
@@ -54,22 +77,27 @@
             profileModel.Email = claims.FirstOrDefault(x => x.Type == "email").Value;
             profileModel.FirstName = claims.FirstOrDefault(x => x.Type == "given_name").Value;
             profileModel.LastName = claims.FirstOrDefault(x => x.Type == "family_name").Value;
-            var dob = claims.FirstOrDefault(x => x.Type == "birthdate")?.Value;
-            var parsedDate = DateTime.Parse(dob);
-            profileModel.DateOfBirth = parsedDate;
+            string? dob = claims.FirstOrDefault(x => x.Type == "birthdate")?.Value;
+
+            if (!DateTime.TryParse(dob, out DateTime parsedDate))
+                parsedDate = DateTime.MinValue;
+            else
+                profileModel.DateOfBirth = parsedDate;
         }
     }
+
     public class ProfileModel
     {
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateTime? DateOfBirth { get; set; } = new DateTime();
+        public DateTime? DateOfBirth { get; set; }
     }
     private async Task Submit()
     {
         await form.Validate();
 
+        processing = !processing;
         var userUpdateProfileDto = new UserUpdateProfileDto
         {
             GivenName = profileModel.FirstName,
@@ -77,16 +105,14 @@
             BirthDate = profileModel.DateOfBirth
         };
 
-        try
-        {
-            await UserService.UpdateProfile(userUpdateProfileDto);            
 
-            Snackbar.Add("Submited!", MudBlazor.Severity.Success);
-        }
-        catch(Exception ex)
-        {
-            Snackbar.Add("Profile update unsuccessful!", MudBlazor.Severity.Error);
-        }
+        var data = await UserService.UpdateProfile(userUpdateProfileDto);
+
+        if(data.StatusCode == System.Net.HttpStatusCode.NoContent)
+            Snackbar.Add("Profile has been saved successfully!", MudBlazor.Severity.Success);
+
+        processing = !processing;
+
     }
 
     /// <summary>
