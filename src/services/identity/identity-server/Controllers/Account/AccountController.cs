@@ -38,6 +38,7 @@ namespace IdentityServerHost.Quickstart.UI
     [AllowAnonymous]
     public class AccountController : Controller
     {
+        private readonly ILogger<AccountController> logger;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
@@ -57,7 +58,8 @@ namespace IdentityServerHost.Quickstart.UI
             IMapper mapper,
             UserManager<ApplicationUser> userManager,
             IEmailSender emailSender,
-            IVerifyEmailRepository verifyEmailRepository
+            IVerifyEmailRepository verifyEmailRepository,
+            ILogger<AccountController> logger
             )
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
@@ -72,6 +74,7 @@ namespace IdentityServerHost.Quickstart.UI
             _userManager = userManager;
             this.emailSender = emailSender;
             this.verifyEmailRepository = verifyEmailRepository;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -80,6 +83,7 @@ namespace IdentityServerHost.Quickstart.UI
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
+            
             // build a model so we know what to show on the login page
             var vm = await BuildLoginViewModelAsync(returnUrl);
 
@@ -87,6 +91,21 @@ namespace IdentityServerHost.Quickstart.UI
             {
                 // we only have one option for logging in and it's an external provider
                 return RedirectToAction("Challenge", "External", new { scheme = vm.ExternalLoginScheme, returnUrl });
+            }
+
+            var lastMessage = returnUrl.Split("&").LastOrDefault();
+            if (!string.IsNullOrEmpty(lastMessage))
+            {
+                if (lastMessage.Split("=")[0].Equals("signupMessage", StringComparison.OrdinalIgnoreCase))
+                {
+                    ViewBag.Message = $"You have successfully signed up with your email {lastMessage.Split("=")[1]}. Please continue with login";
+                    vm.Email = lastMessage.Split("=")[1];
+                }
+                else if (lastMessage.Split("=")[0].Equals("resetMessage", StringComparison.OrdinalIgnoreCase))
+                {
+                    ViewBag.Message = $"You have successfully reset your password. Please continue with login";
+                    vm.Email = lastMessage.Split("=")[1];
+                }
             }
 
             return View(vm);
@@ -131,7 +150,7 @@ namespace IdentityServerHost.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-                var user = await _signInManager.UserManager.FindByNameAsync(model.Username);
+                var user = await _signInManager.UserManager.FindByNameAsync(model.Email);
 
                 // validate username/password against in-memory store
                 if (user != null && (await _signInManager.CheckPasswordSignInAsync(user, model.Password, true)) == SignInResult.Success)
@@ -153,7 +172,7 @@ namespace IdentityServerHost.Quickstart.UI
                     // issue authentication cookie with subject ID and username
                     var isuser = new IdentityServerUser(user.Id)
                     {
-                        DisplayName = user.UserName
+                        DisplayName = user.Email
                     };
 
                     await HttpContext.SignInAsync(isuser, props);
@@ -187,7 +206,7 @@ namespace IdentityServerHost.Quickstart.UI
                     }
                 }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+                await _events.RaiseAsync(new UserLoginFailureEvent(model.Email, "invalid credentials", clientId:context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
 
@@ -305,14 +324,20 @@ namespace IdentityServerHost.Quickstart.UI
 
                 // send email to user with unique code
                 // so that user can verify their email
-                var usersToBeEmailed = new Dictionary<string, string>
+                try
                 {
-                    { userModel.FirstName, user.Email }
-                };
-                var message = new EmailMessage(usersToBeEmailed, verifyEmailEntity.Code);
-                emailSender.SendEmail(message);
-
-
+                    var usersToBeEmailed = new Dictionary<string, string>
+                    {
+                        { userModel.FirstName, user.Email }
+                    };
+                    var message = new EmailMessage(usersToBeEmailed, verifyEmailEntity.Code);
+                    emailSender.SendCodeToVerifyEmail(message);
+                    logger.LogInformation($"Verify email code has been sent to {user.Email}");
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"Verify email code has not been sent to {user.Email}. Error: {ex.Message}");
+                }
 
                 if (context != null)
                 {
@@ -324,6 +349,7 @@ namespace IdentityServerHost.Quickstart.UI
                     }
 
                     // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                    userModel.ReturnUrl += "&signupmessage="+userModel.Email;
                     return Redirect(userModel.ReturnUrl);
                 }
 
@@ -366,20 +392,27 @@ namespace IdentityServerHost.Quickstart.UI
 
             var user = await _userManager.FindByEmailAsync(forgotPasswordModel.Email);
             if (user == null)
+            {
+                logger.LogError($"User with email {forgotPasswordModel.Email} does not exist. Error at ForgotPassword");
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var callback = Url.Action(nameof(ResetPassword), "Account", new { token, email = user.Email, returnUrl = forgotPasswordModel.ReturnUrl }, Request.Scheme);
 
             var message = new EmailMessage(new Dictionary<string, string> { { forgotPasswordModel.Email, forgotPasswordModel.Email} }, "Reset password token", callback);
             emailSender.SendEmail(message);
+            logger.LogInformation($"Forgot password email sent to {forgotPasswordModel.Email}");
 
-            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            //return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            return RedirectToAction("ForgotPasswordConfirmation", "Account", new { email = forgotPasswordModel.Email });
         }
 
         [HttpGet]
-        public IActionResult ForgotPasswordConfirmation()
+        public IActionResult ForgotPasswordConfirmation(string email = null)
         {
+            if (!string.IsNullOrEmpty(email))
+                ViewBag.Email = email;
             return View();
         }
 
@@ -399,7 +432,10 @@ namespace IdentityServerHost.Quickstart.UI
 
             var user = await _userManager.FindByEmailAsync(resetPasswordModel.Email);
             if (user == null)
+            {
+                logger.LogError($"User {resetPasswordModel.Email} does not exist for reset password");
                 RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
 
             var resetPassResult = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.Password);
             if (!resetPassResult.Succeeded)
@@ -408,13 +444,14 @@ namespace IdentityServerHost.Quickstart.UI
                 {
                     ModelState.TryAddModelError(error.Code, error.Description);
                 }
-
+                ViewBag.ErrorMessage = "Reset password link has been expired";
+                logger.LogInformation($"Reset password link has been expired for user {resetPasswordModel.Email}");
                 return View();
             }
 
-            return RedirectToAction("ResetPasswordConfirmation", "Account", new { ReturnUrl = resetPasswordModel.ReturnUrl  });
+            resetPasswordModel.ReturnUrl += "&resetMessage=" + resetPasswordModel.Email;
 
-            //return RedirectToAction(ResetPasswordConfirmation));
+            return RedirectToAction("Login", "Account", new { ReturnUrl = resetPasswordModel.ReturnUrl  });
         }
 
         [HttpGet]
@@ -427,7 +464,7 @@ namespace IdentityServerHost.Quickstart.UI
         /*****************************************/
         /* helper APIs for the AccountController */
         /*****************************************/
-        private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
+        private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl, string email = null)
         {
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
@@ -439,7 +476,7 @@ namespace IdentityServerHost.Quickstart.UI
                 {
                     EnableLocalLogin = local,
                     ReturnUrl = returnUrl,
-                    Username = context?.LoginHint,
+                    Email = context?.LoginHint,
                 };
 
                 if (!local)
@@ -480,7 +517,7 @@ namespace IdentityServerHost.Quickstart.UI
                 AllowRememberLogin = AccountOptions.AllowRememberLogin,
                 EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
                 ReturnUrl = returnUrl,
-                Username = context?.LoginHint,
+                Email = context?.LoginHint,
                 ExternalProviders = providers.ToArray()
             };
         }
@@ -488,7 +525,7 @@ namespace IdentityServerHost.Quickstart.UI
         private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
         {
             var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
-            vm.Username = model.Username;
+            vm.Email = model.Email;
             vm.RememberLogin = model.RememberLogin;
             return vm;
         }

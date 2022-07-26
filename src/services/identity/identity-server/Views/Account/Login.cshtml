@@ -5,48 +5,62 @@
             <h3 class="center-heading">Login to Your Account</h3>
             <h1>Login</h1>
         </div>*@
-
-    <partial name="_ValidationSummary" />
+    <div class="row justify-content-center">
+        <div class="custom-center custom-error-message col-sm-6">
+            <partial name="_ValidationSummary" />
+        </div>
+    </div>
+    
 
     <div class="row justify-content-center">
+        
 
         @if (Model.EnableLocalLogin)
         {
+
+
             <div class="col-sm-6">
                 <div class="card custom-card">
+                    @if (!string.IsNullOrEmpty(ViewBag.Message))
+                    {
+                        <div class="alert alert-success custom-center" role="alert">
+                            @ViewBag.Message
+                        </div>
+                    }
+
                     <div class="custom-center">
                         <h2>Login to Your Account</h2>
                         Don't have an account? <a class="custom-signup" asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl">Sign Up</a>
                     </div>
-                    
+
                     <div class="card-body">
                         <form asp-route="Login">
                             <input type="hidden" asp-for="ReturnUrl" />
 
                             <div class="form-group">
-                                <label asp-for="Username"></label>
-                                <input class="form-control" placeholder="Email Address" asp-for="Username" autofocus>
+                                <label asp-for="Email"></label>
+                                <input class="form-control" placeholder="Email Address" asp-for="Email" autofocus>
                             </div>
                             <div class="form-group">
                                 <label asp-for="Password"></label>
                                 <input type="password" class="form-control" placeholder="Password" asp-for="Password" autocomplete="off">
                             </div>
                             @*@if (Model.AllowRememberLogin)
-                {
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input class="form-check-input" asp-for="RememberLogin">
-                            <label class="form-check-label" asp-for="RememberLogin">
-                                Remember My Login
-                            </label>
-                        </div>
-                    </div>
-                }*@
+                            {
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" asp-for="RememberLogin">
+                                        <label class="form-check-label" asp-for="RememberLogin">
+                                            Remember My Login
+                                        </label>
+                                    </div>
+                                </div>
+                            }*@
                             <button class="btn btn-primary btn-block custom-button" name="button" value="login">Login</button>
                             <div class="custom-forgot-wrapper">
                                 <a class="custom-forgot" asp-controller="Account" asp-action="ForgotPassword" asp-route-returnUrl="@Model.ReturnUrl">Forgot Your Password?</a>
                             </div>
-                            
+
                             @*<button class="btn btn-secondary" name="button" value="cancel">Cancel</button>*@
                         </form>
                     </div>
