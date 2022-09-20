@@ -16,6 +16,15 @@
     <ProjectReference Include="..\..\..\common\common.entityframework.infrastructure\common.entityframework.csproj" />
     <ProjectReference Include="..\user.application\user.application.csproj" />
     <ProjectReference Include="..\user.domain\user.domain.csproj" />
+    <ProjectReference Include="..\..\..\common\common.storage\common.storage.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Services\" />
+    <None Remove="Service\BlobStorage\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service\" />
+    <Folder Include="Service\BlobStorage\" />
+  </ItemGroup>
 </Project>

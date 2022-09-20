@@ -15,7 +15,11 @@
         <MudForm Model="@profileModel" @ref="@form" Validation="@(profileValidator.ValidateValue)" ValidationDelay="0">
             <MudCardContent>
                 <div Style="text-align: center">
-                    <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" Style="width: 100px; height: 100px" />
+                    <div class="container">
+                        <MudAvatar Image="images/toiletvisit.jpg" Size="Size.Large" />
+                        <MudLink Href="#"><MudIcon Icon="@Icons.Filled.CameraAlt" Class="camera" /></MudLink>
+                    </div>
+
                     <MudText>@string.Concat(profileModel.FirstName, " ", profileModel.LastName)</MudText>
                     <MudText Typo="Typo.body2">MEMBER SINCE SEPTEMBER 2021</MudText>
                 </div>

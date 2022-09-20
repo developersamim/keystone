@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "common.shared", "common\com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "common.emailsender", "common\common.emailsender\common.emailsender.csproj", "{ED0E877D-E4A4-4877-9317-F6A2A28A942A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "common.storage", "common\common.storage\common.storage.csproj", "{96B16054-4754-499F-9788-7E62092F4FFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{ED0E877D-E4A4-4877-9317-F6A2A28A942A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED0E877D-E4A4-4877-9317-F6A2A28A942A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED0E877D-E4A4-4877-9317-F6A2A28A942A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96B16054-4754-499F-9788-7E62092F4FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B16054-4754-499F-9788-7E62092F4FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B16054-4754-499F-9788-7E62092F4FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B16054-4754-499F-9788-7E62092F4FFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -164,6 +170,7 @@ Global
 		{969491D2-EC7F-4F29-AF6D-C0D9FC35E1B1} = {A2367078-1144-42D2-B934-9D6EBA5D402A}
 		{DF2C38F8-BAC5-477A-A965-D6216570CBE1} = {BEAB4CC9-B8CF-4A98-BE4A-04C878774C72}
 		{ED0E877D-E4A4-4877-9317-F6A2A28A942A} = {BEAB4CC9-B8CF-4A98-BE4A-04C878774C72}
+		{96B16054-4754-499F-9788-7E62092F4FFF} = {BEAB4CC9-B8CF-4A98-BE4A-04C878774C72}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D9963A4C-93AC-4FF6-B181-B2ECEAC236B3}

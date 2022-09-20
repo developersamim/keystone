@@ -32,10 +32,12 @@
     <None Remove="Features\Users\Queries\GetUsers\" />
     <None Remove="Features\Users\Queries\GetVerifyEmailByUserId\" />
     <None Remove="Features\Users\Commands\SendEmailVerifyCode\" />
+    <None Remove="Contracts\Service\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\Users\Queries\GetUsers\" />
     <Folder Include="Features\Users\Queries\GetVerifyEmailByUserId\" />
     <Folder Include="Features\Users\Commands\SendEmailVerifyCode\" />
+    <Folder Include="Contracts\Service\" />
   </ItemGroup>
 </Project>
