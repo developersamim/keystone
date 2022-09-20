@@ -21,7 +21,7 @@ name: Identity-CICD
 
 env:
   AZURE_WEBAPP_NAME: isp-identity-uat    # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE_PATH: 'src/services/identity/identity-server'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_PACKAGE_PATH: './src/services/identity/identity-server'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '6.0.x'                 # set this to the .NET Core version to use
 
 on:
