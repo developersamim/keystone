@@ -18,10 +18,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.3" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
+    <PackageReference Include="Azure.Security.KeyVault.Secrets" Version="4.3.0" />
+    <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,6 +47,10 @@
     <None Remove="Services\" />
     <None Remove="Infrastructure\Repositories\" />
     <None Remove="Infrastructure\Migrations\ApplicationDb\" />
+    <None Remove="Microsoft.ApplicationInsights.AspNetCore" />
+    <None Remove="Azure.Security.KeyVault.Secrets" />
+    <None Remove="Azure.Security.KeyVault.Keys" />
+    <None Remove="IdentityServerConfig\KeyVault\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="IdentityServerConfig\" />
@@ -54,6 +61,7 @@
     <Folder Include="Services\" />
     <Folder Include="Infrastructure\Repositories\" />
     <Folder Include="Infrastructure\Migrations\ApplicationDb\" />
+    <Folder Include="IdentityServerConfig\KeyVault\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\common\common.api.authentication\common.api.authentication.csproj">
@@ -63,6 +71,9 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
     <ProjectReference Include="..\..\..\common\common.emailsender\common.emailsender.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\common\common.api\common.api.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

@@ -1,4 +1,5 @@
 using common.emailsender;
+using common.api.KeyVault;
 using identity_server.Extension;
 using identity_server.IdentityServerConfig;
 using identity_server.Infrastructure;
@@ -9,12 +10,34 @@ using IdentityServer4.Test;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using Serilog;
+using common.api;
+using identity_server.IdentityServerConfig.KeyVault;
+
+const string AppName = "ISP-IDENTITY-UAT";
+
+//AppVersionInfo.InitialiseBuildInfoGivenPath(Directory.GetCurrentDirectory());
 
 var builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsProduction())
+{
+    builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+}
+
+Log.Information($"Environment: {builder.Environment.EnvironmentName}");
+
+builder.Host
+    //.ConfigureSerilog(AppName)
+    .ConfigureKeyVault();
+
 
 EmailSetting emailSetting = builder.Configuration.GetSection("EmailSetting").Get<EmailSetting>();
 builder.Services.AddSingleton(emailSetting);
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+var KeyVaultSetting = builder.Services.AddAndBindConfigurationSection<KeyVaultSetting>(builder.Configuration, "KeyVault");
 
 // Add services to the container.
 
@@ -52,8 +75,8 @@ builder.Services.AddIdentityServer()
     .AddOperationalStore(options =>
     {
         options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationAssembly));
-    })
-    .AddDeveloperSigningCredential();
+    });
+    //.AddDeveloperSigningCredential();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(Program));
@@ -75,6 +98,16 @@ builder.Services.AddCors(options =>
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddTransient<IRedirectUriValidator, SwaggerDevelopmentRedirectValidator>();
+}
+else
+{
+    builder.Services.AddTransient(c => new KeyVaultConfig()
+    {
+        KeyVaultCertificateName = KeyVaultSetting.SigningCertName,
+        KeyVaultName = KeyVaultSetting.VaultName,
+        KeyVaultRolloverHours = KeyVaultSetting.RolloverHours
+    });
+    builder.Services.AddKeyVaultSigningCredentials();
 }
 
 builder.Services.AddScoped<IVerifyEmailRepository, VerifyEmailRepository>();
@@ -98,6 +131,11 @@ if (app.Environment.IsDevelopment())
     //               .AllowAnyMethod()
     //               .AllowAnyHeader()
     //               .AllowAnyOrigin());
+}
+else
+{
+    // the default HSTS value is 30 days. You may want to change this for production scenarios
+    app.UseHsts();
 }
 
 app.InitializeDatabase(app.Environment.IsDevelopment(), app.Services);
