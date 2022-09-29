@@ -14,6 +14,7 @@ using Microsoft.Extensions.FileProviders;
 using Serilog;
 using common.api;
 using identity_server.IdentityServerConfig.KeyVault;
+using identity_server.Settings;
 
 const string AppName = "ISP-IDENTITY-UAT";
 
@@ -48,12 +49,13 @@ var KeyVaultSetting = builder.Services.AddAndBindConfigurationSection<KeyVaultSe
 // cookie policy to deal with temporary browser incompatibilities
 builder.Services.AddSameSiteCookiePolicy();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var serviceSettings = builder.Services.AddAndBindConfigurationSection<ServiceSettings>(builder.Configuration, "ServiceSettings");
 var migrationAssembly = typeof(Program).Assembly.GetName().Name;
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationAssembly));
+    options.UseSqlServer(serviceSettings.SqlConnectionString, sql => sql.MigrationsAssembly(migrationAssembly));
 });
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(e =>
@@ -70,13 +72,13 @@ builder.Services.AddIdentityServer()
     .AddAspNetIdentity<ApplicationUser>()
     .AddConfigurationStore(options =>
     {
-        options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationAssembly));
+        options.ConfigureDbContext = b => b.UseSqlServer(serviceSettings.SqlConnectionString, sql => sql.MigrationsAssembly(migrationAssembly));
     })
     .AddOperationalStore(options =>
     {
-        options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationAssembly));
-    });
-    //.AddDeveloperSigningCredential();
+        options.ConfigureDbContext = b => b.UseSqlServer(serviceSettings.SqlConnectionString, sql => sql.MigrationsAssembly(migrationAssembly));
+    })
+    .AddDeveloperSigningCredential();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(Program));
