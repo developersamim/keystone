@@ -27,7 +27,7 @@ env:
 on:
   push:
     paths: 
-      - 'src/services/identity'
+      - 'src/services/identity/**'
     branches: [ "main" ]
   workflow_dispatch:
 
