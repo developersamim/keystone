@@ -55,6 +55,11 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Create a user
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
     [HttpPost]
     [AllowAnonymous]
     public async Task<ActionResult> Post([FromBody] CreateUserCommand command)
