@@ -26,6 +26,11 @@ public class UserController : ControllerBase
         this.mediator = mediator;
     }
 
+    /// <summary>
+    /// Get User
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult> GetUser([FromQuery] string? userId)
     {
