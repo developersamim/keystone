@@ -94,16 +94,16 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "My User API V1");
-
-        options.OAuthClientId("user_api_swagger");
-        options.OAuthAppName("User API - Swagger");
-        options.OAuthUsePkce();
-    });
+    app.UseSwagger();    
 }
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "My User API V1");
+
+    options.OAuthClientId("user_api_swagger");
+    options.OAuthAppName("User API - Swagger");
+    options.OAuthUsePkce();
+});
 app.ConfigureCustomExceptionHandler();
 
 //app.UseHttpsRedirection();
