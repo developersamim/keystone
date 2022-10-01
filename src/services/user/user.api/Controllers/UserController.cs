@@ -69,6 +69,12 @@ public class UserController : ControllerBase
         return StatusCode(204);
     }
 
+    /// <summary>
+    /// Update profile element
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="profileElements"></param>
+    /// <returns></returns>
     [HttpPut("{userId}")]
     public async Task<ActionResult> UpdateProfileElement([FromRoute] string userId, [FromBody] Dictionary<string, object> profileElements)
     {
