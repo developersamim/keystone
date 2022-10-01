@@ -28,7 +28,7 @@ on:
   push:
     branches: [ "main" ]
     paths: 
-      - 'src/services/user'
+      - 'src/services/user/'
   workflow_dispatch:
 
 permissions:
