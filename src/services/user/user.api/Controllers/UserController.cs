@@ -42,6 +42,10 @@ public class UserController : ControllerBase
         return Ok(result);  
     }
 
+    /// <summary>
+    /// Get all users
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("all")]
     public async Task<ActionResult> GetUsers()
     {
