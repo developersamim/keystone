@@ -176,6 +176,22 @@ public static class Config
                         IdentityServerConstants.StandardScopes.OpenId
                     }
                 },
+                new Client
+                {
+                    ClientId = "user.api",
+                    ClientName = "User API",
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("secret".Sha256())},
+
+                    AllowedScopes =
+                    {
+                        KnownScope.ServerAccess.ToScope(),
+                        KnownScope.ClientAccess.ToScope(),
+                        KnownScope.Role.ToScope(),
+                        IdentityServerConstants.StandardScopes.OpenId
+                    }
+                },
                 // blazor wasm clientapp
                 new Client
                 {
