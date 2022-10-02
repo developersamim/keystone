@@ -111,7 +111,7 @@ public static class Config
         };
 
     public static IEnumerable<Client> DevelopmentClients =>
-        new List<Client>
+        new List<Client> 
         {
                 new()
                 {
@@ -130,7 +130,11 @@ public static class Config
                     RequirePkce = true,
 
                     AllowOfflineAccess = true,
-                    AllowedCorsOrigins = new List<string>() { "http://localhost", "https://localhost" },
+                    AllowedCorsOrigins = new List<string>() { 
+                        "http://localhost", 
+                        "https://localhost", 
+                        "https://isp-user-api-uat.azurewebsites.net"
+                    },
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     RefreshTokenExpiration = TokenExpiration.Sliding,
 

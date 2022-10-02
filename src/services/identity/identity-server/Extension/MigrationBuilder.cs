@@ -60,7 +60,7 @@ public static class MigrationBuilder
             context.SaveChanges();
         }
 
-        if (!context.IdentityResources.Any())
+        if (context.IdentityResources.Any())
         {
             foreach(var resource in Config.IdentityResources)
             {
@@ -70,7 +70,7 @@ public static class MigrationBuilder
             context.SaveChanges();
         }
 
-        if (!context.ApiScopes.Any())
+        if (context.ApiScopes.Any())
         {
             foreach(var scope in Config.ApiScopes)
             {
@@ -80,7 +80,7 @@ public static class MigrationBuilder
             context.SaveChanges();
         }
 
-        if (!context.ApiResources.Any())
+        if (context.ApiResources.Any())
         {
             foreach(var resource in Config.ApiResources)
             {
