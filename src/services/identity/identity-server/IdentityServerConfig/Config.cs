@@ -122,7 +122,10 @@ public static class Config
                         new Secret("secret@786".Sha256())
                     },
 
-                    RedirectUris = { "https://notused" },
+                    RedirectUris = { 
+                        "https://notused", 
+                        "https://isp-user-api-uat.azurewebsites.net/swagger/oauth2-redirect.html" 
+                    },
                     PostLogoutRedirectUris = { "https://notused" },
                     RequireClientSecret = false,
 
