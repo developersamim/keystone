@@ -119,7 +119,7 @@ public static class Config
                     ClientName = "Swagger UI for Development Identity Server",
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret("secret@786".Sha256())
                     },
 
                     RedirectUris = { "https://notused" },
@@ -132,8 +132,7 @@ public static class Config
                     AllowOfflineAccess = true,
                     AllowedCorsOrigins = new List<string>() { 
                         "http://localhost", 
-                        "https://localhost", 
-                        "https://isp-user-api-uat.azurewebsites.net"
+                        "https://localhost"
                     },
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     RefreshTokenExpiration = TokenExpiration.Sliding,
@@ -164,22 +163,6 @@ public static class Config
                 {
                     ClientId = "clientaggregator.api",
                     ClientName = "Client Aggregator API",
-
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = { new Secret("secret".Sha256())},
-
-                    AllowedScopes =
-                    {
-                        KnownScope.ServerAccess.ToScope(),
-                        KnownScope.ClientAccess.ToScope(),
-                        KnownScope.Role.ToScope(),
-                        IdentityServerConstants.StandardScopes.OpenId
-                    }
-                },
-                new Client
-                {
-                    ClientId = "user.api",
-                    ClientName = "User API",
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets = { new Secret("secret".Sha256())},
