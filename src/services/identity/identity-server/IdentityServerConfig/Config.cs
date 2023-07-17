@@ -181,7 +181,7 @@ public static class Config
                     RequireClientSecret = false,
                     AllowedCorsOrigins =
                     {
-                        "https://localhost:4001"
+                        "https://localhost:5001"
                     },
                     AllowedScopes =
                     {

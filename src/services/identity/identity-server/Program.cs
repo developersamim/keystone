@@ -75,8 +75,8 @@ builder.Services.AddIdentityServer()
     .AddOperationalStore(options =>
     {
         options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationAssembly));
-    });
-    //.AddDeveloperSigningCredential();
+    })
+    .AddDeveloperSigningCredential();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(typeof(Program));
