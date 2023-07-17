@@ -78,7 +78,7 @@ namespace IdentityServerHost.Quickstart.UI
         }
 
         /// <summary>
-        /// Entry point into the login workflow
+        /// Entry point into the login workflow, get method
         /// </summary>
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)

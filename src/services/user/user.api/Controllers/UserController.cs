@@ -26,6 +26,11 @@ public class UserController : ControllerBase
         this.mediator = mediator;
     }
 
+    /// <summary>
+    /// Get User
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult> GetUser([FromQuery] string? userId)
     {
@@ -37,6 +42,10 @@ public class UserController : ControllerBase
         return Ok(result);  
     }
 
+    /// <summary>
+    /// Get all users
+    /// </summary>
+    /// <returns></returns>
     [HttpGet("all")]
     public async Task<ActionResult> GetUsers()
     {
@@ -46,6 +55,11 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Create a user
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
     [HttpPost]
     [AllowAnonymous]
     public async Task<ActionResult> Post([FromBody] CreateUserCommand command)
@@ -55,6 +69,12 @@ public class UserController : ControllerBase
         return StatusCode(204);
     }
 
+    /// <summary>
+    /// Update profile element
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="profileElements"></param>
+    /// <returns></returns>
     [HttpPut("{userId}")]
     public async Task<ActionResult> UpdateProfileElement([FromRoute] string userId, [FromBody] Dictionary<string, object> profileElements)
     {

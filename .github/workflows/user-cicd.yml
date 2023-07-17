@@ -17,18 +17,18 @@
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
-name: Identity-CICD
+name: user-cicd
 
 env:
-  AZURE_WEBAPP_NAME: isp-identity-uat    # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: isp-user-api-uat    # set this to the name of your Azure Web App
   AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '6.0.x'                 # set this to the .NET Core version to use
 
 on:
   push:
-    paths: 
-      - 'src/services/identity/**'
     branches: [ "main" ]
+    paths: 
+      - 'src/services/user/**'
   workflow_dispatch:
 
 permissions:
@@ -55,10 +55,10 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build src/services/identity/identity-server --configuration Release
+        run: dotnet build src/services/user/user.api --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish src/services/identity/identity-server -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish src/services/user/user.api -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -86,5 +86,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_ISP_IDENTITY_UAT }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_ISP_USER_API_UAT }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

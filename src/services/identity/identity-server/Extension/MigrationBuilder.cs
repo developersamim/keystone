@@ -44,8 +44,8 @@ public static class MigrationBuilder
         }
 
         // always seed a reset on each deploy
-        if (isDevelopment)
-        {
+        //if (isDevelopment)
+        //{
             foreach (var client in Config.DevelopmentClients)
             {
                 var existing = context.Clients.AsNoTracking().FirstOrDefault(e => e.ClientId == client.ClientId);
@@ -58,7 +58,7 @@ public static class MigrationBuilder
             }
 
             context.SaveChanges();
-        }
+        //}
 
         if (!context.IdentityResources.Any())
         {

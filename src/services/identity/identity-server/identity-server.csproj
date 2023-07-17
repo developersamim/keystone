@@ -1,11 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>identity_server</RootNamespace>
+    <UserSecretsId>4be91c53-a5aa-441f-8552-f625cd91b39f</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
@@ -57,8 +65,6 @@
     <Folder Include="Extension\" />
     <Folder Include="Models\" />
     <Folder Include="Mappings\" />
-    <Folder Include="Settings\" />
-    <Folder Include="Services\" />
     <Folder Include="Infrastructure\Repositories\" />
     <Folder Include="Infrastructure\Migrations\ApplicationDb\" />
     <Folder Include="IdentityServerConfig\KeyVault\" />

@@ -111,7 +111,7 @@ public static class Config
         };
 
     public static IEnumerable<Client> DevelopmentClients =>
-        new List<Client>
+        new List<Client> 
         {
                 new()
                 {
@@ -119,10 +119,13 @@ public static class Config
                     ClientName = "Swagger UI for Development Identity Server",
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret("secret@786".Sha256())
                     },
 
-                    RedirectUris = { "https://notused" },
+                    RedirectUris = { 
+                        "https://notused", 
+                        "https://isp-user-api-uat.azurewebsites.net/swagger/oauth2-redirect.html" 
+                    },
                     PostLogoutRedirectUris = { "https://notused" },
                     RequireClientSecret = false,
 
@@ -130,7 +133,10 @@ public static class Config
                     RequirePkce = true,
 
                     AllowOfflineAccess = true,
-                    AllowedCorsOrigins = new List<string>() { "http://localhost", "https://localhost" },
+                    AllowedCorsOrigins = new List<string>() { 
+                        "http://localhost", 
+                        "https://localhost"
+                    },
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     RefreshTokenExpiration = TokenExpiration.Sliding,
 
